@@ -1,0 +1,1615 @@
+{
+  "metadata": {
+    "title": "The Rotwood Accord candidate board",
+    "description": "Current candidate board after adding Woodland Crimes / Boundless Elves suggestions and removing blue/red cards from the cut pile.",
+    "generated_at": "2026-05-28T17:42:23.470376+00:00",
+    "notes": [
+      "Designed for import into rotwood_accord_deck_board_updated.html.",
+      "Scryfall data is intentionally null; use the page's Load Scryfall data button after import.",
+      "Blue/red off-color cards were removed from the cut pile: Arcane Adaptation, Archetype of Imagination, Ilharg, the Raze-Boar."
+    ]
+  },
+  "ui": {
+    "stacked": {
+      "main": false,
+      "maybe": false,
+      "module": false,
+      "cut": true
+    }
+  },
+  "cards": [
+    {
+      "id": "6108f2be-1617-449f-9bea-59f066c63000",
+      "name": "Chatterfang, Squirrel General",
+      "section": "main",
+      "status": "Core / likely commander",
+      "role": "Squirrel/token/sacrifice engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "14dc2a89-71cb-41bf-9ff9-aa4e02a0c673",
+      "name": "Elvish Archdruid",
+      "section": "main",
+      "status": "Core",
+      "role": "Elf lord + huge mana",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "24d4bf9e-c8d9-4bfa-a2a4-fae1fb6cf07c",
+      "name": "Elvish Mystic",
+      "section": "main",
+      "status": "Core",
+      "role": "1-mana ramp",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "d1f87d91-bbba-4377-b496-59f400688106",
+      "name": "Fyndhorn Elves",
+      "section": "main",
+      "status": "Core",
+      "role": "1-mana ramp",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "8fd6c0cd-f553-4ff3-a215-2c565cb770dc",
+      "name": "Heroic Intervention",
+      "section": "main",
+      "status": "Core",
+      "role": "Hexproof + indestructible",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "207485e0-31a7-479b-a02c-75741b5bdd6e",
+      "name": "Llanowar Elves",
+      "section": "main",
+      "status": "Core",
+      "role": "1-mana ramp",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "978c7eda-f816-48df-bb28-cd33a859f98e",
+      "name": "Priest of Titania",
+      "section": "main",
+      "status": "Core",
+      "role": "Massive Elf mana engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "e35d0678-c4e2-4831-9388-567a9a798865",
+      "name": "Skullclamp",
+      "section": "main",
+      "status": "Core",
+      "role": "Token draw engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a7d0dba4-5cb1-43ca-969b-e025faddde99",
+      "name": "Sol Ring",
+      "section": "main",
+      "status": "Core",
+      "role": "Commander ramp staple",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "6d45e550-c0d7-4e90-88be-c3302c3eaf3f",
+      "name": "Allosaurus Shepherd",
+      "section": "main",
+      "status": "Premium candidate",
+      "role": "Anti-counterspell + Elf finisher",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "79f04405-a47e-4b8a-beba-c29e740da514",
+      "name": "Beast Whisperer",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Draw on creature casts",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "4ede5a9a-5d93-4ddb-89ef-04bc0ca980af",
+      "name": "Beast Within",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Universal permanent removal",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "87197101-7f80-41a3-83bb-07fe185a059c",
+      "name": "Camellia, the Seedmiser",
+      "section": "main",
+      "status": "Strong V1 / module",
+      "role": "Food/sacrifice/squirrel engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "edff562d-1286-4a54-927b-81a8ff314223",
+      "name": "Deep Forest Hermit",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "ETB squirrel burst + vanishing",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "5d07cba8-30ea-4bcf-a93f-cc1395a4bdde",
+      "name": "Deranged Hermit",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "ETB squirrel burst",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "6141c29a-5b6b-49f4-bcf3-437e90e5552c",
+      "name": "Drey Keeper",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Squirrels + menace",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "5658d06c-af4c-41f5-80f9-d24b6b45dc12",
+      "name": "Dwynen's Elite",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Cheap two-body Elf play",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "81d0b06f-92aa-4b42-a26b-ea0573160bb2",
+      "name": "Golgari Charm",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Regenerate / shrink / destroy enchantment",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "32a2eecd-1b88-4be7-a4c6-187649157985",
+      "name": "Golgari Findbroker",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Permanent recursion",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "2c9e0242-a28c-499b-8835-2c84a53b7ea2",
+      "name": "Idol of Oblivion",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Token-based repeatable card draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "5660eb1b-86b7-4917-9c06-cb2933ae2a32",
+      "name": "Imperious Perfect",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Elf lord + token maker",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "8d985f5a-3f2a-44fd-9a6c-ae1909ec4535",
+      "name": "Jarad, Golgari Lich Lord",
+      "section": "main",
+      "status": "Strong V1 / finisher",
+      "role": "Sacrifice big creatures for table damage",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "2c568fdf-97e0-4b65-a451-a24e8fe429e6",
+      "name": "Leaf-Crowned Visionary",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Elf lord + draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "149959ba-0d61-4abe-bcab-8cdeb1f2fbd5",
+      "name": "Marwyn, the Nurturer",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Scaling mana engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "0ebb0d67-6661-4cff-9038-fad7cbf9b68d",
+      "name": "Maskwood Nexus",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "All creatures are every creature type",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "7a2ebfc5-c118-4671-9a11-9270c87e3961",
+      "name": "Meren of Clan Nel Toth",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Long-game creature recursion",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "172d485a-6b98-42cd-8bd4-c35b07a4d900",
+      "name": "Mirkwood Bats",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Token creation/sacrifice drains each opponent",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "6cfb7306-58b9-471a-89fc-532debfc1788",
+      "name": "Nadier's Nightblade",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Tokens leaving drain each opponent",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "52854ef2-06bb-4408-965f-bbed42fc32b7",
+      "name": "Phyrexian Reclamation",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Repeatable creature recursion",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "84d3a5eb-a7c1-4479-a6b6-5f457ae64d03",
+      "name": "Poison-Tip Archer",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Reach, deathtouch, death drain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "79e1e726-bcd6-41ff-ba82-14864aff0d16",
+      "name": "Prowess of the Fair",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Nontoken Elf death creates Elf token",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "11a0c55f-a7af-49e9-9f99-5d8720d11048",
+      "name": "Ravenous Squirrel",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Sacrifice payoff",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "06371a17-0cc3-4aa4-ba6c-e45e42d6addf",
+      "name": "Shaman of the Pack",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Elf-count drain finisher",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "23304864-a803-41f1-82a4-eb0c9ac52be3",
+      "name": "Toski, Bearer of Secrets",
+      "section": "main",
+      "status": "Strong V1",
+      "role": "Go-wide combat damage card draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "3ad9566e-e05b-45b4-b18e-bb5e99f0724c",
+      "name": "Abomination of Llanowar",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Huge Elf/graveyard threat",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "0be7c0a1-eebc-443c-b13d-482caa470390",
+      "name": "Animate Dead",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Reanimation",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a041ba72-ec2c-4693-a5f1-f5377ac5b53d",
+      "name": "Arbor Elf",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Forest untap ramp",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "da5e9821-e9b4-4e10-8753-8024921bd5da",
+      "name": "Arcane Signet",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Color fixing and ramp",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "170564fe-3423-4c8c-b651-19bbe30e2d4c",
+      "name": "Asceticism",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Team hexproof + regeneration",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "cea83825-7af2-4d24-a64f-7c5ad421f5a4",
+      "name": "Banner of Kinship",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Tribal anthem/scaling for Elf or Squirrel",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "66c5b1f1-db29-4092-a57e-56acd1d4a058",
+      "name": "Bastion of Remembrance",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Aristocrats drain on enchantment body",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "dc68412f-d458-44f9-879d-ba402d4a0737",
+      "name": "Beastmaster Ascension",
+      "section": "main",
+      "status": "Strong finisher",
+      "role": "Go-wide pump",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "3b202433-9046-4d4b-8a70-bd3fbec8c879",
+      "name": "Bojuka Bog",
+      "section": "main",
+      "status": "Strong land candidate",
+      "role": "Graveyard hate on a land",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "7101dc67-4ded-4095-87fb-bf088ae6e475",
+      "name": "Craterhoof Behemoth",
+      "section": "main",
+      "status": "Strong finisher",
+      "role": "Massive team pump + trample",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "01880475-3c55-48a6-ad28-331d54be4a62",
+      "name": "Deadly Dispute",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Sacrifice token/artifact to draw cards and create Treasure",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "fe2721d9-9354-4ab0-958f-67d4e290d4ef",
+      "name": "Deathrite Shaman",
+      "section": "main",
+      "status": "Strong utility",
+      "role": "Graveyard hate, fixing, drain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a101a15b-cfa8-4dc2-9d62-4cc3b336ed4b",
+      "name": "Dictate of Erebos",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Sacrifice punishment",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "d0e9ac5f-ed83-4380-b454-540b2f1e7a30",
+      "name": "Dionus, Elvish Archdruid",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf untap / counter synergy",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "bdc1e03c-df8c-4298-8596-6cbea11809e7",
+      "name": "Elderfang Ritualist",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf recursion on death",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "cb7ca27f-d676-421f-9b72-3d700bd90acd",
+      "name": "Elderfang Venom",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf deathtouch + death drain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "3fc761f5-68dc-4023-9e6b-5dac13f15c9a",
+      "name": "Elven Ambush",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Instant-speed Elf token burst",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "3b4bab41-652f-424d-8bca-8247fe14802c",
+      "name": "Elvish Visionary",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Cheap Elf ETB card draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "e035d21d-c5c4-493e-bb9c-ba87b49ae198",
+      "name": "Elvish Warmaster",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf token engine + pump",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "51307895-dc97-4480-a08e-91c6b38f0f24",
+      "name": "End-Raze Forerunners",
+      "section": "main",
+      "status": "Strong maybe / finisher",
+      "role": "Budget Craterhoof-style finisher",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "f02c088c-09af-42e2-adc1-4843af8926dc",
+      "name": "Eternal Witness",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Universal recursion",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "c7ea3fed-70fa-44e9-9a8a-7e5bbdb6f10e",
+      "name": "Exotic Orchard",
+      "section": "main",
+      "status": "Strong land candidate",
+      "role": "Multiplayer color fixing",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "cab8173f-76a3-44c8-86b9-f9cc2a189228",
+      "name": "Ezuri, Renegade Leader",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf regen + Overrun",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "93d26a7f-6e1f-467a-ac73-441d3adfbc9f",
+      "name": "Fresh Meat",
+      "section": "main",
+      "status": "Strong maybe",
+      "role": "Board-wipe or sacrifice recovery with Beast tokens",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "87e06d16-1a3a-4624-ac8a-c525eb4c599f",
+      "name": "Guardian Project",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Creature ETB draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "dd1b490f-d71b-4dea-84fd-5c0b4434da08",
+      "name": "Haywire Mite",
+      "section": "main",
+      "status": "Strong utility",
+      "role": "Cheap artifact/enchantment removal and lifegain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b768c13b-101b-4b0b-b92d-9137b5dd279d",
+      "name": "Hazel of the Rootbloom",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Token-based mana engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "be805269-6c60-4534-b18d-5dac1becfafc",
+      "name": "Honored Dreyleader",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Scalable Squirrel/Food finisher with trample",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "36fd12a5-6984-4c91-b6ea-252a49714c7a",
+      "name": "Immaculate Magistrate",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf-count +1/+1 counter engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "958ae53a-b08c-44bc-8c78-1ba0a32aff7b",
+      "name": "Joraga Warcaller",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Scalable Elf anthem",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "c588be40-8fdd-495d-9666-9481dd6ef6d1",
+      "name": "Maelstrom Pulse",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Flexible permanent removal",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "8a5ab8aa-4d2a-487d-90a5-c348c57c32c9",
+      "name": "Mazirek, Kraul Death Priest",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Sacrifice/counter payoff for the whole board",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "960edae4-4acc-4d92-9d76-8b5510b53f96",
+      "name": "Miara, Thorn of the Glade",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Optional draw when Elves die",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "ad21c925-4906-4d90-8629-98bb4219d74b",
+      "name": "Moldervine Reclamation",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Creature death draw + lifegain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b90b30c4-c8b1-42f2-8929-c0a81f1efb6b",
+      "name": "Morcant's Loyalist",
+      "section": "main",
+      "status": "Strong candidate / verify",
+      "role": "Elf recursion/support",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "242ed173-1b2d-40cc-afac-a554969c8695",
+      "name": "Necromancy",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Flexible reanimation",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "ba3b4de8-8c3f-42d7-85a4-67f2b5bba573",
+      "name": "Ohran Frostfang",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Deathtouch plus combat damage card draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "ed557867-194b-4ebc-8f61-c926e1767997",
+      "name": "Path of Ancestry",
+      "section": "main",
+      "status": "Strong land candidate",
+      "role": "Tribal color fixing and scry",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "c46805b8-23db-4bc4-bd2c-e95354f7d08c",
+      "name": "Pest Infestation",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Artifact/enchantment removal plus token creation",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a3f10708-7219-4150-8082-96b013178db1",
+      "name": "Plumb the Forbidden",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Sacrifice draw spell and board-wipe response",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "9373b7ef-8de1-4a4a-9605-7a0bc95f66b5",
+      "name": "Realmwalker",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Tribal top-deck casting",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "abce84f2-60c9-4ce9-9e72-558a4c6eedfc",
+      "name": "Regrowth",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Universal card recovery",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "9a6f376d-9d65-4dde-9e0e-274d518a697f",
+      "name": "Scurry of Squirrels",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Multiplayer squirrel scaling",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "855365a4-09ec-4813-b783-edcec221903b",
+      "name": "Selfless Safewright",
+      "section": "main",
+      "status": "Strong candidate / verify",
+      "role": "Flash/convoke tribal protection",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "43892f0d-fb15-4ee8-ab22-9380b26b6bc1",
+      "name": "Shamanic Revelation",
+      "section": "main",
+      "status": "Strong maybe",
+      "role": "Go-wide card draw and lifegain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "9c924c11-e6db-4ae5-9175-b9ffc4ca27e3",
+      "name": "Skemfar Shadowsage",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf-count drain/lifegain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a78adaf1-6529-4f9c-8888-f469164a37e2",
+      "name": "Spidersilk Armor",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Team reach",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "e8b9adba-35ca-49fb-9902-a0c20b7b582c",
+      "name": "Squirrel Nest",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Repeatable squirrel production",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a69763d0-0725-4068-b660-23261cd734a2",
+      "name": "Swarmyard",
+      "section": "main",
+      "status": "Strong land candidate",
+      "role": "Regenerates key Squirrels",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "2e6ac6be-cc33-4a88-b6ac-5e17dd7ca132",
+      "name": "Swarmyard Massacre",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Squirrel-linked sweeper/token spell",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "2ec61993-cb89-4d68-baeb-370733b3eb88",
+      "name": "Swiftfoot Boots",
+      "section": "main",
+      "status": "Strong utility",
+      "role": "Haste + hexproof",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "45c4885f-2b40-4b43-9a96-bd6712c293a9",
+      "name": "Sylvan Messenger",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf tribal card advantage",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "783ed1e4-330f-432b-b22c-5a6e6308225d",
+      "name": "Talisman of Resilience",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Fast Golgari ramp/fixing",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "cc1c5727-8a0f-4043-a1d6-199f6edbe018",
+      "name": "Tear Asunder",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Flexible artifact/enchantment removal with exile mode",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a5279dd8-953f-4a2c-ab01-7b8042d70313",
+      "name": "The Odd Acorn Gang",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Squirrel combat + draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "124850e3-a9fe-4089-92d3-9d08947f53c3",
+      "name": "Tireless Provisioner",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Landfall Food/Treasure engine; works with Chatterfang",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "78f592b8-85fb-4c17-ac24-80daa917f389",
+      "name": "Tyvar Kell",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf planeswalker engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "2ad27f8f-d9fd-44ca-a9a5-f39bdc03f244",
+      "name": "Tyvar the Bellicose",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Elf combat scaling",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "10399714-b95d-49bf-9d9a-11274b8d90aa",
+      "name": "Valley Rotcaller",
+      "section": "main",
+      "status": "Strong candidate",
+      "role": "Squirrel attrition pressure",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "c19b30e6-0a33-44f5-a3d9-8e0ce4d60d73",
+      "name": "Cache Grab",
+      "section": "main",
+      "status": "Candidate",
+      "role": "Self-mill and permanent recovery / squirrel-adjacent value",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "19c8476b-8045-414c-906b-bb91a33d3921",
+      "name": "Chitterspitter",
+      "section": "main",
+      "status": "Candidate",
+      "role": "Squirrel token scaling",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "43f6821a-1085-45b5-826f-3e7239decaeb",
+      "name": "Dwynen, Gilt-Leaf Daen",
+      "section": "main",
+      "status": "Candidate",
+      "role": "Elf lord, reach, lifegain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "3945a540-65fe-4920-a967-2938815fdeab",
+      "name": "Elvish Skysweeper",
+      "section": "main",
+      "status": "Candidate",
+      "role": "Reach + destroy flyer",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "7d453c79-54fa-4beb-8d4a-a37ac484fa70",
+      "name": "Jagged-Scar Archers",
+      "section": "main",
+      "status": "Candidate",
+      "role": "Reach, scales with Elves",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "80153774-d530-48f1-a0e4-59c332583862",
+      "name": "Ochran Assassin",
+      "section": "main",
+      "status": "Candidate",
+      "role": "Deathtouch forced-block attacker",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "e34abdec-7929-425d-96c5-01c647d3c84b",
+      "name": "Scurry Oak",
+      "section": "main",
+      "status": "Candidate",
+      "role": "Counter/squirrel combo potential",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a76b3dd2-420d-4716-b5ba-f0c891b0e59f",
+      "name": "Sharpshooter Elf",
+      "section": "main",
+      "status": "Candidate / verify",
+      "role": "Anti-flying Elf",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "f3c33cce-9cf9-403a-89d0-9e49b324b334",
+      "name": "Squirrel Mob",
+      "section": "main",
+      "status": "Finisher candidate",
+      "role": "Huge squirrel; works with Taunting Elf/Jarad",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "2c688e2e-7075-4ffe-a999-6dea19c61ec5",
+      "name": "Squirrel Sovereign",
+      "section": "main",
+      "status": "Candidate",
+      "role": "Squirrel lord",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "70496148-dea6-41fc-830a-eaf6dbd82e4c",
+      "name": "Taunting Elf",
+      "section": "main",
+      "status": "Finisher package candidate",
+      "role": "Pull blockers from Squirrel Mob",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "725c56b4-c236-4033-b169-5eef268dfce4",
+      "name": "Acorn Harvest",
+      "section": "main",
+      "status": "Maybe",
+      "role": "Squirrel bodies + flashback",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "f5c47ebd-0682-4997-bbb5-8c22340f52f7",
+      "name": "Chatter of the Squirrel",
+      "section": "main",
+      "status": "Maybe",
+      "role": "Cheap squirrel + flashback",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b6b3b7fc-78ec-4826-8407-060e173cbfbf",
+      "name": "Arachnogenesis",
+      "section": "maybe",
+      "status": "Strong maybe",
+      "role": "Anti-combat blowout",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "cd70d853-7181-4d04-858f-2cd3f444a459",
+      "name": "Arasta of the Endless Web",
+      "section": "maybe",
+      "status": "Strong maybe",
+      "role": "Anti-spell/flyer tech; creates reach Spider tokens",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "72c62721-6db6-4166-8ec5-2d0f3d569194",
+      "name": "Conspiracy",
+      "section": "maybe",
+      "status": "Strong maybe",
+      "role": "Name Elf; tribal conversion",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "df7fb845-fddf-41d1-97c3-a765effe8fbc",
+      "name": "Galadhrim Ambush",
+      "section": "maybe",
+      "status": "Strong maybe",
+      "role": "Elf token burst + combat prevention",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "d903c74a-791e-4c54-a614-f22716e421a5",
+      "name": "Llanowar Tribe",
+      "section": "maybe",
+      "status": "Strong maybe",
+      "role": "Elf that taps for three green mana",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "0c8caa78-af5d-409e-84b8-b88e2d8f606f",
+      "name": "Chittering Witch",
+      "section": "maybe",
+      "status": "Candidate",
+      "role": "Token creation and sacrifice-based removal",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "cf8cc37c-bb70-49aa-bfb1-ac1087db1f97",
+      "name": "Destiny Spinner",
+      "section": "maybe",
+      "status": "Meta candidate",
+      "role": "Anti-counterspell protection",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b7dddda3-8502-41cf-a0db-5a91ac77b747",
+      "name": "Golgari Signet",
+      "section": "maybe",
+      "status": "Candidate",
+      "role": "Artifact ramp/fixing",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "5faa3494-16f0-47da-ab0b-f9c4636eba20",
+      "name": "Joraga Visionary",
+      "section": "maybe",
+      "status": "Candidate",
+      "role": "Elf ETB card draw, slower than Elvish Visionary",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "72d92866-1827-4d17-8985-edaa24ba0cb0",
+      "name": "Thornweald Archer",
+      "section": "maybe",
+      "status": "Candidate",
+      "role": "Cheap Elf with reach and deathtouch",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "d18b2d2d-36cd-431a-8962-92859b004be9",
+      "name": "Veil of Summer",
+      "section": "maybe",
+      "status": "Meta candidate",
+      "role": "Anti-blue/black protection",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "45d82115-3f2f-4f38-90b4-88a0c6d1f7a0",
+      "name": "Chatterstorm",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Squirrel density with storm upside",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "58a190db-79a6-4b7d-b011-695df43d7f19",
+      "name": "Conjurer's Closet",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Reuse ETB effects",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "372920be-4f09-4c31-9275-7bd47fcce45f",
+      "name": "Eclipsed Elf",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Finds Elf, Swamp, or Forest",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "86dc1bbc-3724-418d-8f19-a7ea1b6510b0",
+      "name": "Elvish Champion",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Elf buff + forestwalk",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "6b5c8554-3f65-463d-a63d-52569dfb6146",
+      "name": "Glissa Sunslayer",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Combat value / removal",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "e06e88c9-8451-4235-b1c4-14a1d1f9f7a8",
+      "name": "Glissa, the Traitor",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Artifact recursion",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a6114f8e-1320-4596-9572-bf96bb4b4144",
+      "name": "Gravity Well",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Punishes attacking flyers",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "1de2125f-49f7-4b4a-a8b2-dae8033d9115",
+      "name": "Grim Backwoods",
+      "section": "maybe",
+      "status": "Maybe land",
+      "role": "Sacrifice outlet and card draw on a land",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a3fd3a0d-29a9-4803-ae0e-3b50ce547ab4",
+      "name": "Harald, King of Skemfar",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Finds Elf, Warrior, or Tyvar",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "a2a1b3c0-68ec-45f5-aa6e-a691ceeccabc",
+      "name": "Hornet Queen",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Anti-flyer top-end with deathtouch flyers",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "36a49ea6-b7c4-4f41-93c6-3b11d8c322a3",
+      "name": "Imaryll, Elfhame Elite",
+      "section": "maybe",
+      "status": "Maybe finisher",
+      "role": "Elf-count combat threat",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "8b1b5459-79dc-4f5d-abcc-305bca7e4b3a",
+      "name": "Morbid Opportunist",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Once-per-turn death-trigger draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "3281da04-e1da-4ffe-bd0c-8ae2a4b1f8d5",
+      "name": "Nested Shambler",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Aristocrats fodder that dies into Squirrel tokens",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "8211ff29-4b19-468f-a508-6359fc367115",
+      "name": "Oran-Rief, the Vastwood",
+      "section": "maybe",
+      "status": "Maybe land",
+      "role": "+1/+1 counter support for green creatures",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "dcb9f548-18f0-492b-9249-2b3dce59cd7c",
+      "name": "Perpetual Timepiece",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Anti-graveyard exile",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "f3c4f9ec-6e8c-4575-bb94-4e7622a59e40",
+      "name": "Prosperous Innkeeper",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Treasure plus creature ETB lifegain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "c05bb695-843a-4765-9d87-43ecb38fc2a5",
+      "name": "Savra, Queen of the Golgari",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Color-based sacrifice payoff",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "e1c24ef3-33f6-4466-8e60-a7d40fbf70a4",
+      "name": "Skyfisher Spider",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Reach plus sacrifice/removal utility",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "25ac18c4-f187-4054-82e5-63aa97d10de4",
+      "name": "Thorn Lieutenant",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Elf body with anti-targeting token value and late pump",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "4cf1ff77-533d-4fce-a7e0-e4a5ac87bfa4",
+      "name": "Wardens of the Cycle",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Morbid draw/lifegain",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "274fb506-f133-4fc5-9d21-669f284d5dbf",
+      "name": "Wrap in Vigor",
+      "section": "maybe",
+      "status": "Maybe",
+      "role": "Team regeneration",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "15fc9859-e939-4a8b-9b45-cbc3342310f8",
+      "name": "Ruthless Knave",
+      "section": "module",
+      "status": "Combo-ish maybe",
+      "role": "Sacrifice creatures into Treasure/card draw lines",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "d7850f72-4fa6-4d99-b0de-52ba5e7ce731",
+      "name": "Academy Manufactor",
+      "section": "module",
+      "status": "Food/Treasure module",
+      "role": "Turns Food/Clue/Treasure creation into all three",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "86ce2066-bd99-4258-83f8-0aa28c50a0ec",
+      "name": "Ashnod's Altar",
+      "section": "module",
+      "status": "Combo module",
+      "role": "Free sacrifice outlet and colorless mana engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "2ed8454e-43a0-4945-99f7-95b88c05754a",
+      "name": "Beledros Witherbloom",
+      "section": "module",
+      "status": "Top-end token module",
+      "role": "Creates Pest tokens each upkeep and can untap lands",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "7f37ec87-adc3-456f-82e6-e23992b8bc90",
+      "name": "Bootleggers' Stash",
+      "section": "module",
+      "status": "Food/Treasure module",
+      "role": "Turns lands into Treasure makers; high ceiling but expensive",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "33a3a0fc-37df-4ec8-81df-95b0865c2c8f",
+      "name": "Cloakwood Hermit",
+      "section": "module",
+      "status": "Background module",
+      "role": "Squirrel generation",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "c063f296-53bf-4935-837d-2d32f1d036ca",
+      "name": "Flourishing Defenses",
+      "section": "module",
+      "status": "Combo module",
+      "role": "-1/-1 counter creates Elf token",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "82eaf5b1-1139-481a-a28b-75bb1cd3d883",
+      "name": "Gilded Goose",
+      "section": "module",
+      "status": "Food module / ramp",
+      "role": "Early ramp and Food production",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "c14425b4-659b-415a-a978-885e3cc005b1",
+      "name": "Hazel's Brewmaster",
+      "section": "module",
+      "status": "Food module",
+      "role": "Food gains activated abilities",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "7f45f6dd-2eaf-4aa0-a621-89ea0843a4eb",
+      "name": "High Perfect Morcant",
+      "section": "module",
+      "status": "Combo module",
+      "role": "Blight / proliferate Elf engine",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b034adc6-dacc-4ae9-917d-dad80beac0dc",
+      "name": "Ivy Lane Denizen",
+      "section": "module",
+      "status": "Combo module",
+      "role": "Combo candidate with Scurry Oak",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "020979ef-4da1-4a9c-a9b4-fae526a3cc18",
+      "name": "Izoni, Center of the Web",
+      "section": "module",
+      "status": "Token/value module",
+      "role": "Tokens, reach, surveil, draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "52e3da42-7308-4c74-9cf8-11aef70e6dd1",
+      "name": "Izoni, Thousand-Eyed",
+      "section": "module",
+      "status": "Graveyard module",
+      "role": "Token burst + sacrifice draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "d80534c1-0b01-4070-abe0-f8ef0a8a16b7",
+      "name": "Kagha, Shadow Archdruid",
+      "section": "module",
+      "status": "Graveyard module",
+      "role": "Self-mill + graveyard value",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b965df53-33d4-4a70-b0c0-c68f4232eb1c",
+      "name": "Maralen of the Mornsong",
+      "section": "module",
+      "status": "High-risk module",
+      "role": "Draw lock / forced tutor",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "237ffc56-4a87-4ad5-a850-d05edd5ca26a",
+      "name": "Nath of the Gilt-Leaf",
+      "section": "module",
+      "status": "Discard module",
+      "role": "Discard + Elf tokens",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "5726a2b5-8b66-4643-84b2-37bb84c04a0a",
+      "name": "Peregrin Took",
+      "section": "module",
+      "status": "Food module",
+      "role": "Extra Food generation and Food card draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "7fe89063-924d-47f6-a533-af59ebd98676",
+      "name": "Pitiless Plunderer",
+      "section": "module",
+      "status": "Combo module",
+      "role": "Treasure on creature deaths; high combo potential with Chatterfang",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "bd14d38b-a573-46d6-94aa-b2c4fcce48e5",
+      "name": "Saw in Half",
+      "section": "module",
+      "status": "ETB value module",
+      "role": "Copies useful ETB creatures in a strange but powerful way",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b37c6c84-6cb6-4f58-996f-9b0fc176ea8d",
+      "name": "Shadowheart, Dark Justiciar",
+      "section": "module",
+      "status": "Sacrifice draw module",
+      "role": "Sacrifice creature to draw",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "2a15d713-4b37-47e4-8a4e-e948f494b958",
+      "name": "Sylvan Library",
+      "section": "module",
+      "status": "Value module",
+      "role": "Card selection",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "9eff8f44-2cda-436f-bd4a-2c24aeefbd53",
+      "name": "Twilight Diviner",
+      "section": "module",
+      "status": "Graveyard module",
+      "role": "Surveil + graveyard-copy value",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "06868818-e27b-4d50-9bb3-0f36c2e18a97",
+      "name": "Underrealm Lich",
+      "section": "module",
+      "status": "Value module",
+      "role": "Draw replacement + graveyard filling",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b712ce22-a36d-4369-86c6-4f431de122bf",
+      "name": "Warren Soultrader",
+      "section": "module",
+      "status": "Combo module",
+      "role": "Sacrifice/life/Treasure engine; combo potential",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "51013897-60d6-4f8a-91b4-d0b91170c723",
+      "name": "Ygra, Eater of All",
+      "section": "module",
+      "status": "Food module",
+      "role": "Makes creatures Food; strong with Food/sacrifice package",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "09508f37-d160-45f3-b0fa-d6eb31efa293",
+      "name": "Acorn Catapult",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Flavorful but slow",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "632ee3e0-296e-4789-a8fe-9d6486b13564",
+      "name": "Creeping Renaissance",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Too slow",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "7e145552-0e73-47dc-9fc4-8e3cc34b082c",
+      "name": "Dark Ritual",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "One-shot burst",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "bda6b37a-6262-4bc4-96df-ffed8a8dd05a",
+      "name": "Elven Bow",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Weaker flyer defense",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "221769c3-810a-4ae1-a033-6a39cf7f1d0a",
+      "name": "Elvish Piper",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Not a creature-cheat deck",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "e95a69b5-d7be-44c3-9c29-6791389cde20",
+      "name": "Norwood Priestess",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Too far from core plan",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "8f75ebff-16d8-4fb3-8cdc-06e7ee972538",
+      "name": "Nut Collector",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Too slow at six mana",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "55eaee11-7bfd-4266-af19-c48a0d345a57",
+      "name": "Primal Vigor",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Symmetrical doubler",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "47bdd618-9c96-4657-9f3a-a350acc52479",
+      "name": "Quicksilver Amulet",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Not needed in V1",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "b86ed655-0435-4d68-9055-2e8891640de3",
+      "name": "Rofellos, Llanowar Emissary",
+      "section": "cut",
+      "status": "Cut",
+      "role": "Banned in Commander",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "ebe09bfc-be6a-40ee-b43d-3b421cde318e",
+      "name": "Sandwurm Convergence",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "Too expensive",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "0a6dff8c-7f17-49ed-96c0-d1d52ed14cf9",
+      "name": "Skemfar Avenger",
+      "section": "cut",
+      "status": "Cut",
+      "role": "Life loss + misses token deaths",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "83334a1d-73fa-43bf-8b06-2cef0defcac3",
+      "name": "Tower Defense",
+      "section": "cut",
+      "status": "Cut from V1",
+      "role": "One-shot defense",
+      "scryfall": null,
+      "error": null
+    },
+    {
+      "id": "f5cd6f91-98d7-432a-a45f-07a3f9d16cac",
+      "name": "Twinblade Assassins",
+      "section": "cut",
+      "status": "Cut",
+      "role": "Too slow",
+      "scryfall": null,
+      "error": null
+    }
+  ]
+}

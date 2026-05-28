@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Rotwood Accord - Scryfall Candidate Board</title>
+  <style>
+    :root {
+      --bg:#07110c; --panel:#111f16; --panel2:#17291d; --line:#294332; --text:#edf7ee; --muted:#b5c5b8;
+      --green:#58b85d; --gold:#c4a85a; --blue:#4f85d8; --red:#d55d4d; --shadow:0 18px 40px rgba(0,0,0,.35);
+      --cardw:125px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at 10% 0%,#24452a 0,#07110c 38%),linear-gradient(#07110c,#0d1a12);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+    .app{max-width:1850px;margin:auto;padding:18px}
+    .hero,.toolbar,.search-panel{background:rgba(17,31,22,.95);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+    .hero{padding:20px;margin-bottom:14px;display:grid;grid-template-columns:1fr auto;gap:16px}
+    .hero h1{margin:0 0 6px;font-size:clamp(1.5rem,3vw,2.6rem)}
+    .hero p{margin:0;color:var(--muted);line-height:1.5;max-width:950px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn{border:1px solid #ffffff22;border-radius:12px;padding:10px 13px;color:white;background:#ffffff14;font-weight:800;cursor:pointer;white-space:nowrap}
+    .btn:hover{filter:brightness(1.08)} .btn:disabled{opacity:.55;cursor:not-allowed}
+    .green{background:linear-gradient(#58b85d,#2c7534)} .blue{background:linear-gradient(#4f85d8,#2855ad)} .gold{background:linear-gradient(#c4a85a,#7c641f)} .red{background:linear-gradient(#d55d4d,#943124)}
+    .toolbar{display:grid;grid-template-columns:1.1fr 1.25fr auto;gap:10px;align-items:start;padding:12px;margin-bottom:14px}
+    .row{display:flex;gap:8px;align-items:center}
+    .field,.select{width:100%;min-height:42px;border:1px solid var(--line);border-radius:12px;background:#ffffff12;color:var(--text);padding:9px 11px;font:inherit}
+    .field:focus,.select:focus{outline:2px solid #58b85d55}
+    .stats{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+    .pill{border:1px solid var(--line);border-radius:999px;background:#ffffff12;padding:7px 9px;font-weight:800;white-space:nowrap}
+    .search-panel{margin:-4px 0 14px;padding:12px;display:none}
+    .search-panel.show{display:block}
+    .search-header{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+    .search-header h3{margin:0;font-size:1rem}
+    .search-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+    .result{border:1px solid #ffffff22;border-radius:14px;background:#00000033;overflow:hidden;display:grid;grid-template-columns:74px 1fr;min-height:104px}
+    .result img{width:74px;height:104px;object-fit:cover;background:#ffffff10}
+    .result-body{padding:8px;display:flex;flex-direction:column;gap:5px}
+    .result-name{font-weight:900;font-size:.82rem;line-height:1.15}
+    .result-type{font-size:.7rem;color:var(--muted);line-height:1.2}
+    .result-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto}
+    .mini-btn{border:1px solid #ffffff22;border-radius:999px;background:#ffffff12;color:white;padding:4px 7px;font-size:.68rem;font-weight:800;cursor:pointer}
+    .mini-btn:hover{filter:brightness(1.12)}
+    .board{display:grid;grid-template-columns:repeat(4,minmax(250px,1fr));gap:14px;align-items:start}
+    .col{background:rgba(17,31,22,.95);border:1px solid var(--line);border-radius:18px;min-height:380px;box-shadow:var(--shadow);overflow:hidden}
+    .col.over{outline:3px solid #58b85d99;outline-offset:3px}
+    .col-head{position:sticky;top:0;z-index:2;background:linear-gradient(#ffffff14,#ffffff09);border-bottom:1px solid var(--line);padding:12px}
+    .col-title{display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .col h2{margin:0;font-size:1.05rem} .col p{margin:7px 0 0;color:var(--muted);font-size:.86rem}
+    .head-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+    .count{background:#58b85d28;border:1px solid #58b85d66;border-radius:999px;padding:4px 9px;font-weight:900}
+    .stack-toggle{font-size:.72rem;padding:5px 8px;border-radius:999px}
+    .cards{min-height:300px;padding:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--cardw),1fr));gap:10px;align-content:start}
+    .cards.stacked{display:block;min-height:220px}
+    .card{position:relative;border:1px solid #ffffff22;border-radius:13px;overflow:hidden;background:#00000044;min-height:190px;cursor:grab;box-shadow:0 12px 25px #00000055;transition:transform .12s, opacity .12s}
+    .card.dragging{opacity:.35} .card:hover{transform:translateY(-2px)}
+    .pic{aspect-ratio:488/680;background:#ffffff10;display:grid;place-items:center;color:var(--muted);font-size:.8rem;text-align:center;padding:8px}
+    .pic img{width:100%;height:100%;object-fit:cover;display:block}
+    .foot{position:absolute;left:0;right:0;bottom:0;padding:8px;background:linear-gradient(#0000,#000d 24%,#000f)}
+    .name{font-weight:900;font-size:.82rem;line-height:1.15}
+    .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+    .tag{font-size:.65rem;border-radius:999px;background:#ffffff22;border:1px solid #ffffff1f;padding:3px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .tag.strong{background:#58b85d3a} .tag.module{background:#4f85d84a} .tag.maybe{background:#c4a85a3a}
+    .quick{position:absolute;top:6px;right:6px;display:flex;gap:5px;opacity:0}
+    .card:hover .quick{opacity:1}
+    .icon{width:28px;height:28px;border-radius:50%;border:1px solid #fff4;background:#000b;color:white;cursor:pointer;font-weight:900}
+    .stack-card{width:var(--cardw);min-height:190px;border:1px solid #ffffff24;border-radius:14px;background:linear-gradient(135deg,#17291d,#07110c);box-shadow:0 16px 28px #0008;position:relative;padding:12px;cursor:pointer;margin:0 auto;color:var(--text)}
+    .stack-card::before,.stack-card::after{content:"";position:absolute;inset:0;border-radius:14px;border:1px solid #ffffff18;background:#ffffff08;z-index:-1}
+    .stack-card::before{transform:rotate(-5deg) translate(-5px,4px)} .stack-card::after{transform:rotate(5deg) translate(5px,6px)}
+    .stack-count{font-size:2.5rem;font-weight:1000;line-height:1;color:#dffad9;margin-top:28px;text-align:center}
+    .stack-label{font-weight:900;text-align:center;margin-top:6px}
+    .stack-hint{color:var(--muted);font-size:.72rem;text-align:center;margin-top:8px;line-height:1.3}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(5px);z-index:50;display:none;place-items:center;padding:20px}
+    .modal.show{display:grid}
+    .modal-dialog{width:min(1060px,96vw);max-height:92vh;overflow:auto;border:1px solid #ffffff24;border-radius:22px;background:linear-gradient(135deg,#142118,#070b08);box-shadow:0 30px 80px #000;display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:18px;padding:18px;position:relative}
+    .modal-close{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid #fff4;background:#000b;color:white;font-size:1.2rem;cursor:pointer}
+    .modal-image{border-radius:18px;overflow:hidden;background:#ffffff10;align-self:start}
+    .modal-image img{display:block;width:100%;height:auto}
+    .modal-info h2{margin:6px 40px 8px 0;font-size:clamp(1.4rem,3vw,2.2rem)}
+    .modal-line{color:var(--muted);margin:6px 0;line-height:1.45}
+    .oracle{white-space:pre-line;background:#ffffff0d;border:1px solid #ffffff14;border-radius:14px;padding:12px;margin:12px 0;line-height:1.45}
+    .modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .modal-actions .select{max-width:260px}
+    .toast{position:fixed;right:16px;bottom:16px;background:#000d;border:1px solid #fff3;color:white;padding:12px 14px;border-radius:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(15px);transition:.18s;pointer-events:none;max-width:420px;z-index:80}
+    .toast.show{opacity:1;transform:none}
+    .hidden-file{display:none}
+    @media(max-width:1200px){.board{grid-template-columns:repeat(2,1fr)}.hero,.toolbar{grid-template-columns:1fr}.actions,.stats{justify-content:flex-start}}
+    @media(max-width:760px){.app{padding:10px}.board{grid-template-columns:1fr}.row{flex-direction:column;align-items:stretch}.cards{grid-template-columns:repeat(auto-fill,minmax(115px,1fr))}.modal-dialog{grid-template-columns:1fr}.modal-image{max-width:340px;margin:auto}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <div>
+      <h1>The Rotwood Accord</h1>
+      <p>Scryfall-powered drag-and-drop candidate board for the Golgari Elf-Squirrel Commander deck. Drag cards between Main V1, Maybeboard, Modules and Cut. Click a card to inspect it.</p>
+    </div>
+    <div class="actions">
+      <button class="btn green" id="loadBtn">Load Scryfall data</button>
+      <button class="btn blue" id="exportBtn">Download JSON</button>
+      <button class="btn gold" id="importBtn">Upload JSON</button>
+      <button class="btn red" id="resetBtn">Reset</button>
+      <input class="hidden-file" id="importFile" type="file" accept="application/json,.json" />
+    </div>
+  </section>
+
+  <section class="toolbar">
+    <div class="row">
+      <input class="field" id="search" placeholder="Filter board by card name, role, type, text or status">
+      <select class="select" id="filter">
+        <option value="all">All sections</option><option value="main">Main V1 Pool</option><option value="maybe">Maybeboard</option><option value="module">Modules</option><option value="cut">Cut / Avoid</option>
+      </select>
+    </div>
+    <div class="row">
+      <input class="field" id="scrySearch" placeholder="Search Scryfall by name, e.g. squirrels, Tyvar, elf draw">
+      <button class="btn green" id="scrySearchBtn">Search Scryfall</button>
+      <input class="field" id="quickAdd" placeholder="Quick add fuzzy name">
+      <button class="btn blue" id="addBtn">Add</button>
+    </div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="search-panel" id="searchPanel">
+    <div class="search-header"><h3 id="searchTitle">Scryfall search results</h3><button class="btn" id="clearResultsBtn">Clear</button></div>
+    <div class="search-results" id="searchResults"></div>
+  </section>
+
+  <main class="board" id="board"></main>
+</div>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div class="modal-image" id="modalImage"></div>
+    <div class="modal-info" id="modalInfo"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY='rotwood-accord-board-v2';
+const sections=[
+  {id:'main',title:'Main V1 Pool',subtitle:'Cards still competing for the first version.'},
+  {id:'maybe',title:'Maybeboard',subtitle:'Good cards, meta cards, or cards waiting for testing.'},
+  {id:'module',title:'Modules / Combo Packages',subtitle:'Swap-in packages like Food, Morcant, Underrealm, or heavy graveyard.'},
+  {id:'cut',title:'Cut / Avoid',subtitle:'Removed from V1, off-color, too weak, or not fitting.'}
+];
+const seed=[
+['Chatterfang, Squirrel General','main','Core / likely commander','Squirrel/token/sacrifice engine'],
+['Llanowar Elves','main','Core','1-mana ramp'],['Elvish Mystic','main','Core','1-mana ramp'],['Fyndhorn Elves','main','Core','1-mana ramp'],['Arbor Elf','main','Strong candidate','Forest untap ramp'],['Priest of Titania','main','Core','Massive Elf mana engine'],['Elvish Archdruid','main','Core','Elf lord + huge mana'],['Marwyn, the Nurturer','main','Strong V1','Scaling mana engine'],['Imperious Perfect','main','Strong V1','Elf lord + token maker'],['Dwynen\'s Elite','main','Strong V1','Cheap two-body Elf play'],['Elvish Warmaster','main','Strong candidate','Elf token engine + pump'],['Dionus, Elvish Archdruid','main','Strong candidate','Elf untap / counter synergy'],['Leaf-Crowned Visionary','main','Strong V1','Elf lord + draw'],['Tyvar Kell','main','Strong candidate','Elf planeswalker engine'],['Dwynen, Gilt-Leaf Daen','main','Candidate','Elf lord, reach, lifegain'],['Joraga Warcaller','main','Strong candidate','Scalable Elf anthem'],['Elvish Champion','maybe','Maybe','Elf buff + forestwalk'],
+['Ravenous Squirrel','main','Strong V1','Sacrifice payoff'],['Drey Keeper','main','Strong V1','Squirrels + menace'],['Deranged Hermit','main','Strong V1','ETB squirrel burst'],['Deep Forest Hermit','main','Strong V1','ETB squirrel burst + vanishing'],['Squirrel Nest','main','Strong candidate','Repeatable squirrel production'],['Scurry of Squirrels','main','Strong candidate','Multiplayer squirrel scaling'],['The Odd Acorn Gang','main','Strong candidate','Squirrel combat + draw'],['Valley Rotcaller','main','Strong candidate','Squirrel attrition pressure'],['Camellia, the Seedmiser','main','Strong V1 / module','Food/sacrifice/squirrel engine'],['Squirrel Sovereign','main','Candidate','Squirrel lord'],['Scurry Oak','main','Candidate','Counter/squirrel combo potential'],['Chitterspitter','main','Candidate','Squirrel token scaling'],['Chatter of the Squirrel','main','Maybe','Cheap squirrel + flashback'],['Acorn Harvest','main','Maybe','Squirrel bodies + flashback'],['Squirrel Mob','main','Finisher candidate','Huge squirrel; works with Taunting Elf/Jarad'],
+['Nadier\'s Nightblade','main','Strong V1','Tokens leaving drain each opponent'],['Poison-Tip Archer','main','Strong V1','Reach, deathtouch, death drain'],['Prowess of the Fair','main','Strong V1','Nontoken Elf death creates Elf token'],['Elderfang Venom','main','Strong candidate','Elf deathtouch + death drain'],['Dictate of Erebos','main','Strong candidate','Sacrifice punishment'],['Moldervine Reclamation','main','Strong candidate','Creature death draw + lifegain'],['Jarad, Golgari Lich Lord','main','Strong V1 / finisher','Sacrifice big creatures for table damage'],['Savra, Queen of the Golgari','maybe','Maybe','Color-based sacrifice payoff'],
+['Skullclamp','main','Core','Token draw engine'],['Beast Whisperer','main','Strong V1','Draw on creature casts'],['Guardian Project','main','Strong candidate','Creature ETB draw'],['Realmwalker','main','Strong candidate','Tribal top-deck casting'],['Miara, Thorn of the Glade','main','Strong candidate','Optional draw when Elves die'],['Skemfar Shadowsage','main','Strong candidate','Elf-count drain/lifegain'],['Wardens of the Cycle','maybe','Maybe','Morbid draw/lifegain'],
+['Meren of Clan Nel Toth','main','Strong V1','Long-game creature recursion'],['Phyrexian Reclamation','main','Strong V1','Repeatable creature recursion'],['Golgari Findbroker','main','Strong V1','Permanent recursion'],['Eternal Witness','main','Strong candidate','Universal recursion'],['Regrowth','main','Strong candidate','Universal card recovery'],['Animate Dead','main','Strong candidate','Reanimation'],['Necromancy','main','Strong candidate','Flexible reanimation'],['Elderfang Ritualist','main','Strong candidate','Elf recursion on death'],['Morcant\'s Loyalist','main','Strong candidate / verify','Elf recursion/support'],
+['Heroic Intervention','main','Core','Hexproof + indestructible'],['Golgari Charm','main','Strong V1','Regenerate / shrink / destroy enchantment'],['Asceticism','main','Strong candidate','Team hexproof + regeneration'],['Selfless Safewright','main','Strong candidate / verify','Flash/convoke tribal protection'],['Swiftfoot Boots','main','Strong utility','Haste + hexproof'],['Allosaurus Shepherd','main','Premium candidate','Anti-counterspell + Elf finisher'],['Wrap in Vigor','maybe','Maybe','Team regeneration'],['Veil of Summer','maybe','Meta candidate','Anti-blue/black protection'],['Destiny Spinner','maybe','Meta candidate','Anti-counterspell protection'],['Perpetual Timepiece','maybe','Maybe','Anti-graveyard exile'],
+['Spidersilk Armor','main','Strong candidate','Team reach'],['Sharpshooter Elf','main','Candidate / verify','Anti-flying Elf'],['Elvish Skysweeper','main','Candidate','Reach + destroy flyer'],['Jagged-Scar Archers','main','Candidate','Reach, scales with Elves'],['Arachnogenesis','maybe','Strong maybe','Anti-combat blowout'],['Gravity Well','maybe','Maybe','Punishes attacking flyers'],['Galadhrim Ambush','maybe','Strong maybe','Elf token burst + combat prevention'],
+['Craterhoof Behemoth','main','Strong finisher','Massive team pump + trample'],['Beastmaster Ascension','main','Strong finisher','Go-wide pump'],['Shaman of the Pack','main','Strong V1','Elf-count drain finisher'],['Ezuri, Renegade Leader','main','Strong candidate','Elf regen + Overrun'],['Abomination of Llanowar','main','Strong candidate','Huge Elf/graveyard threat'],['Tyvar the Bellicose','main','Strong candidate','Elf combat scaling'],['Ochran Assassin','main','Candidate','Deathtouch forced-block attacker'],['Imaryll, Elfhame Elite','maybe','Maybe finisher','Elf-count combat threat'],['Taunting Elf','main','Finisher package candidate','Pull blockers from Squirrel Mob'],
+['Maskwood Nexus','main','Strong V1','All creatures are every creature type'],['Conspiracy','maybe','Strong maybe','Name Elf; tribal conversion'],['Beast Within','main','Strong V1','Universal permanent removal'],['Deathrite Shaman','main','Strong utility','Graveyard hate, fixing, drain'],['Conjurer\'s Closet','maybe','Maybe','Reuse ETB effects'],['Eclipsed Elf','maybe','Maybe','Finds Elf, Swamp, or Forest'],['Glissa, the Traitor','maybe','Maybe','Artifact recursion'],['Glissa Sunslayer','maybe','Maybe','Combat value / removal'],['Harald, King of Skemfar','maybe','Maybe','Finds Elf, Warrior, or Tyvar'],
+['High Perfect Morcant','module','Combo module','Blight / proliferate Elf engine'],['Flourishing Defenses','module','Combo module','-1/-1 counter creates Elf token'],['Hazel\'s Brewmaster','module','Food module','Food gains activated abilities'],['Underrealm Lich','module','Value module','Draw replacement + graveyard filling'],['Sylvan Library','module','Value module','Card selection'],['Nath of the Gilt-Leaf','module','Discard module','Discard + Elf tokens'],['Maralen of the Mornsong','module','High-risk module','Draw lock / forced tutor'],['Kagha, Shadow Archdruid','module','Graveyard module','Self-mill + graveyard value'],['Twilight Diviner','module','Graveyard module','Surveil + graveyard-copy value'],['Izoni, Thousand-Eyed','module','Graveyard module','Token burst + sacrifice draw'],['Izoni, Center of the Web','module','Token/value module','Tokens, reach, surveil, draw'],['Shadowheart, Dark Justiciar','module','Sacrifice draw module','Sacrifice creature to draw'],['Cloakwood Hermit','module','Background module','Squirrel generation'],
+['Rofellos, Llanowar Emissary','cut','Cut','Banned in Commander'],['Arcane Adaptation','cut','Cut','Blue; outside Golgari'],['Archetype of Imagination','cut','Cut','Blue; outside Golgari'],['Ilharg, the Raze-Boar','cut','Cut','Red; outside Golgari'],['Elvish Piper','cut','Cut from V1','Not a creature-cheat deck'],['Norwood Priestess','cut','Cut from V1','Too far from core plan'],['Quicksilver Amulet','cut','Cut from V1','Not needed in V1'],['Nut Collector','cut','Cut from V1','Too slow at six mana'],['Acorn Catapult','cut','Cut from V1','Flavorful but slow'],['Primal Vigor','cut','Cut from V1','Symmetrical doubler'],['Skemfar Avenger','cut','Cut','Life loss + misses token deaths'],['Twinblade Assassins','cut','Cut','Too slow'],['Dark Ritual','cut','Cut from V1','One-shot burst'],['Sandwurm Convergence','cut','Cut from V1','Too expensive'],['Tower Defense','cut','Cut from V1','One-shot defense'],['Elven Bow','cut','Cut from V1','Weaker flyer defense'],['Creeping Renaissance','cut','Cut from V1','Too slow']
+];
+function makeCard([name,section,status,role]){return{id:crypto.randomUUID(),name,section,status,role,scryfall:null,error:null}}
+let state=load();
+let dragged=null;
+let modalCardId=null;
+
+const board=document.getElementById('board');
+const search=document.getElementById('search');
+const filter=document.getElementById('filter');
+const stats=document.getElementById('stats');
+const toast=document.getElementById('toast');
+const modal=document.getElementById('modal');
+const modalImage=document.getElementById('modalImage');
+const modalInfo=document.getElementById('modalInfo');
+const searchPanel=document.getElementById('searchPanel');
+const searchResults=document.getElementById('searchResults');
+const searchTitle=document.getElementById('searchTitle');
+
+function load(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const p=JSON.parse(raw);
+      if(Array.isArray(p.cards)) return ensureState(p);
+    }
+  }catch(e){}
+  return ensureState({cards:seed.map(makeCard)});
+}
+function ensureState(s){
+  s.cards=Array.isArray(s.cards)?s.cards:seed.map(makeCard);
+  s.ui=s.ui||{};
+  s.ui.stacked=s.ui.stacked||{cut:true};
+  for(const sec of sections) if(typeof s.ui.stacked[sec.id] !== 'boolean') s.ui.stacked[sec.id]=sec.id==='cut';
+  return s;
+}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+function norm(x){return String(x||'').toLowerCase().trim()}
+function esc(x){return String(x??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}
+function img(c,size='normal'){const s=c?.scryfall;if(!s)return null;return s.image_uris?.[size]||s.image_uris?.normal||s.image_uris?.small||s.card_faces?.[0]?.image_uris?.[size]||s.card_faces?.[0]?.image_uris?.normal||s.card_faces?.[0]?.image_uris?.small||null}
+function tagClass(s){s=norm(s);if(s.includes('core')||s.includes('strong')||s.includes('premium'))return'strong';if(s.includes('module'))return'module';if(s.includes('maybe')||s.includes('candidate')||s.includes('verify'))return'maybe';return''}
+function sectionTitle(id){return sections.find(s=>s.id===id)?.title||id}
+
+function render(){
+  const q=norm(search.value), f=filter.value;
+  board.innerHTML='';
+  sections.forEach(sec=>{
+    const col=document.createElement('section');
+    col.className='col'; col.dataset.sec=sec.id;
+    const all=state.cards.filter(c=>c.section===sec.id);
+    const visible=all.filter(c=>(f==='all'||c.section===f)&&(!q||[c.name,c.status,c.role,c.scryfall?.type_line,c.scryfall?.oracle_text,c.scryfall?.set_name].some(v=>norm(v).includes(q))));
+    const isStacked=state.ui.stacked[sec.id];
+    col.innerHTML=`<div class="col-head"><div class="col-title"><h2>${sec.title}</h2><div class="head-actions"><span class="count">${all.length}</span><button class="btn stack-toggle" data-stack="${sec.id}">${isStacked?'Unstack':'Stack'}</button></div></div><p>${sec.subtitle}</p></div><div class="cards ${isStacked?'stacked':''}"></div>`;
+    col.querySelector('[data-stack]').onclick=()=>{state.ui.stacked[sec.id]=!state.ui.stacked[sec.id];save();render()};
+    const cards=col.querySelector('.cards');
+    if(isStacked) cards.appendChild(renderStack(sec, visible, all.length));
+    else visible.forEach(c=>cards.appendChild(renderCard(c)));
+    drop(col,sec.id); board.appendChild(col);
+  });
+  renderStats();
+}
+
+function renderStack(sec, visible, total){
+  const el=document.createElement('div');
+  el.className='stack-card';
+  el.title='Click to unstack this pile';
+  el.innerHTML=`<div class="stack-count">${total}</div><div class="stack-label">${sec.title}</div><div class="stack-hint">Stacked pile. Click to unstack. Drag cards here to add to this section.</div>`;
+  el.onclick=()=>{state.ui.stacked[sec.id]=false;save();render()};
+  return el;
+}
+
+function renderCard(c){
+  const el=document.createElement('article');
+  el.className='card'; el.draggable=true; el.dataset.id=c.id;
+  const u=img(c), type=c.scryfall?.type_line||'Not loaded yet', mana=c.scryfall?.mana_cost||'';
+  el.innerHTML=`<div class="pic">${u?`<img src="${u}" alt="${esc(c.name)}" loading="lazy">`:`<span>${esc(c.error||'Image not loaded')}</span>`}</div><div class="quick"><button class="icon" title="Open on Scryfall">↗</button><button class="icon" title="Delete">×</button></div><div class="foot"><div class="name">${esc(c.name)}</div><div class="tags">${mana?`<span class="tag">${esc(mana)}</span>`:''}<span class="tag ${tagClass(c.status)}">${esc(c.status)}</span><span class="tag">${esc(type)}</span></div></div>`;
+  el.addEventListener('click',e=>{ if(e.target.closest('.quick')) return; openModal(c.id); });
+  el.addEventListener('dragstart',e=>{dragged=c.id;el.classList.add('dragging');e.dataTransfer.setData('text/plain',c.id);e.dataTransfer.effectAllowed='move'});
+  el.addEventListener('dragend',()=>{dragged=null;el.classList.remove('dragging');document.querySelectorAll('.col.over').forEach(x=>x.classList.remove('over'))});
+  const [openBtn,delBtn]=el.querySelectorAll('.icon');
+  openBtn.onclick=e=>{e.stopPropagation();window.open(c.scryfall?.scryfall_uri||`https://scryfall.com/search?q=${encodeURIComponent('!"'+c.name+'"')}`,'_blank','noopener,noreferrer')};
+  delBtn.onclick=e=>{e.stopPropagation();if(confirm(`Delete ${c.name}?`)){state.cards=state.cards.filter(x=>x.id!==c.id);save();render()}};
+  return el;
+}
+function drop(col,sec){
+  col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('over')});
+  col.addEventListener('dragleave',e=>{if(!col.contains(e.relatedTarget))col.classList.remove('over')});
+  col.addEventListener('drop',e=>{e.preventDefault();const id=e.dataTransfer.getData('text/plain')||dragged;const c=state.cards.find(x=>x.id===id);if(c){c.section=sec;save();render();msg(`${c.name} moved to ${sectionTitle(sec)}.`)}});
+}
+function renderStats(){
+  const counts=Object.fromEntries(sections.map(s=>[s.id,state.cards.filter(c=>c.section===s.id).length]));
+  const loaded=state.cards.filter(c=>c.scryfall).length;
+  stats.innerHTML=`<span class="pill">Total: ${state.cards.length}</span><span class="pill">Main: ${counts.main}</span><span class="pill">Maybe: ${counts.maybe}</span><span class="pill">Modules: ${counts.module}</span><span class="pill">Cut: ${counts.cut}</span><span class="pill">Images: ${loaded}/${state.cards.length}</span>`;
+}
+
+async function sfNamed(name,exact=true){
+  const mode=exact?'exact':'fuzzy';
+  const r=await fetch(`https://api.scryfall.com/cards/named?${mode}=${encodeURIComponent(name)}`);
+  if(!r.ok){let j=null;try{j=await r.json()}catch{}throw new Error(j?.details||`Scryfall could not find ${name}`)}
+  return r.json();
+}
+async function sfSearch(query){
+  const clean=query.trim();
+  if(!clean) return [];
+  const q=/[!:<>=]/.test(clean) ? `game:paper (${clean})` : `game:paper ${clean}`;
+  const r=await fetch(`https://api.scryfall.com/cards/search?unique=cards&order=name&q=${encodeURIComponent(q)}`);
+  if(!r.ok){let j=null;try{j=await r.json()}catch{}throw new Error(j?.details||'No Scryfall results.')}
+  const data=await r.json();
+  return data.data||[];
+}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function loadImages(){
+  const list=state.cards.filter(c=>!c.scryfall);
+  if(!list.length)return msg('All cards already have Scryfall data loaded.');
+  msg(`Loading ${list.length} cards from Scryfall...`);let ok=0,bad=0;
+  for(const c of list){
+    try{c.scryfall=await sfNamed(c.name,true);c.name=c.scryfall.name;c.error=null;ok++}
+    catch(e1){try{c.scryfall=await sfNamed(c.name,false);c.name=c.scryfall.name;c.error=null;ok++}catch(e2){c.error=e2.message;bad++}}
+    save();render();await wait(80);
+  }
+  msg(`Done. Loaded ${ok}. Failed ${bad}.`);
+}
+async function quickAddCard(){
+  const input=document.getElementById('quickAdd');
+  const name=input.value.trim(); if(!name)return;
+  if(state.cards.some(c=>norm(c.name)===norm(name)))return msg(`${name} is already on the board.`);
+  const c=makeCard([name,'main','New candidate','Added manually']);
+  state.cards.unshift(c); save(); render();
+  try{c.scryfall=await sfNamed(name,false);c.name=c.scryfall.name;c.error=null;msg(`Added ${c.name}.`)}
+  catch(e){c.error=e.message;msg(e.message)}
+  input.value='';save();render();
+}
+async function searchScryfall(){
+  const q=document.getElementById('scrySearch').value.trim(); if(!q)return;
+  searchPanel.classList.add('show'); searchResults.innerHTML='<div class="pill">Searching Scryfall...</div>'; searchTitle.textContent=`Scryfall results for “${q}”`;
+  try{
+    const results=(await sfSearch(q)).slice(0,18);
+    if(!results.length){searchResults.innerHTML='<p class="modal-line">No results.</p>';return}
+    searchResults.innerHTML=''; results.forEach(r=>searchResults.appendChild(renderResult(r)));
+  }catch(e){searchResults.innerHTML=`<p class="modal-line">${esc(e.message)}</p>`}
+}
+function renderResult(r){
+  const el=document.createElement('article'); el.className='result';
+  const image=r.image_uris?.small||r.card_faces?.[0]?.image_uris?.small||'';
+  el.innerHTML=`${image?`<img src="${image}" alt="${esc(r.name)}">`:'<div></div>'}<div class="result-body"><div class="result-name">${esc(r.name)}</div><div class="result-type">${esc(r.type_line||'')}</div><div class="result-actions"><button class="mini-btn" data-sec="main">Main</button><button class="mini-btn" data-sec="maybe">Maybe</button><button class="mini-btn" data-sec="module">Module</button><button class="mini-btn" data-open="1">Open</button></div></div>`;
+  el.querySelectorAll('[data-sec]').forEach(btn=>btn.onclick=()=>addScryfallResult(r,btn.dataset.sec));
+  el.querySelector('[data-open]').onclick=()=>window.open(r.scryfall_uri,'_blank','noopener,noreferrer');
+  return el;
+}
+function addScryfallResult(r,section){
+  if(state.cards.some(c=>norm(c.name)===norm(r.name)))return msg(`${r.name} is already on the board.`);
+  state.cards.unshift({id:crypto.randomUUID(),name:r.name,section,status:'New candidate',role:'Added from Scryfall search',scryfall:r,error:null});
+  save();render();msg(`Added ${r.name} to ${sectionTitle(section)}.`);
+}
+
+function openModal(id){
+  const c=state.cards.find(x=>x.id===id); if(!c)return;
+  modalCardId=id;
+  const u=img(c,'large')||img(c,'normal');
+  modalImage.innerHTML=u?`<img src="${u}" alt="${esc(c.name)}">`:`<div class="pic"><span>${esc(c.error||'Image not loaded')}</span></div>`;
+  const sf=c.scryfall||{};
+  const oracle=(sf.oracle_text||sf.card_faces?.map(f=>`${f.name}\n${f.oracle_text||''}`).join('\n\n')||'No Oracle text loaded yet. Use “Load Scryfall data”.');
+  modalInfo.innerHTML=`
+    <h2 id="modalTitle">${esc(c.name)}</h2>
+    <div class="tags"><span class="tag ${tagClass(c.status)}">${esc(c.status)}</span><span class="tag">${esc(sectionTitle(c.section))}</span>${sf.mana_cost?`<span class="tag">${esc(sf.mana_cost)}</span>`:''}</div>
+    <p class="modal-line"><strong>Role:</strong> ${esc(c.role)}</p>
+    <p class="modal-line"><strong>Type:</strong> ${esc(sf.type_line||'Not loaded')}</p>
+    <p class="modal-line"><strong>Set:</strong> ${esc(sf.set_name||'Not loaded')} ${sf.released_at?`(${esc(sf.released_at)})`:''}</p>
+    <div class="oracle">${esc(oracle)}</div>
+    <div class="modal-actions">
+      <select class="select" id="modalMove"><option value="main">Main V1 Pool</option><option value="maybe">Maybeboard</option><option value="module">Modules</option><option value="cut">Cut / Avoid</option></select>
+      <button class="btn green" id="modalMoveBtn">Move card</button>
+      <button class="btn blue" id="modalOpenBtn">Open on Scryfall</button>
+      <button class="btn red" id="modalDeleteBtn">Delete</button>
+    </div>`;
+  document.getElementById('modalMove').value=c.section;
+  document.getElementById('modalMoveBtn').onclick=()=>{c.section=document.getElementById('modalMove').value;save();render();openModal(c.id)};
+  document.getElementById('modalOpenBtn').onclick=()=>window.open(c.scryfall?.scryfall_uri||`https://scryfall.com/search?q=${encodeURIComponent('!"'+c.name+'"')}`,'_blank','noopener,noreferrer');
+  document.getElementById('modalDeleteBtn').onclick=()=>{if(confirm(`Delete ${c.name}?`)){state.cards=state.cards.filter(x=>x.id!==c.id);save();closeModal();render()}};
+  modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
+}
+function closeModal(){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');modalCardId=null}
+function exportJsonDownload(){
+  const data=JSON.stringify(state,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');
+  const stamp=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+  a.href=URL.createObjectURL(blob); a.download=`rotwood-accord-board-${stamp}.json`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000); msg('JSON download created.');
+}
+function importJsonFile(file){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{const p=JSON.parse(reader.result); if(!Array.isArray(p.cards)) throw new Error('JSON must contain a cards array.'); state=ensureState(p); save(); render(); msg('Imported board from JSON.')}
+    catch(e){msg('Import failed: '+e.message)}
+  };
+  reader.readAsText(file);
+}
+function reset(){if(confirm('Reset to default board? This will clear local changes.')){localStorage.removeItem(STORAGE_KEY);state=ensureState({cards:seed.map(makeCard)});render();msg('Board reset.')}}
+function msg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(msg.t);msg.t=setTimeout(()=>toast.classList.remove('show'),3600)}
+
+document.getElementById('loadBtn').onclick=loadImages;
+document.getElementById('addBtn').onclick=quickAddCard;
+document.getElementById('quickAdd').addEventListener('keydown',e=>{if(e.key==='Enter')quickAddCard()});
+document.getElementById('scrySearchBtn').onclick=searchScryfall;
+document.getElementById('scrySearch').addEventListener('keydown',e=>{if(e.key==='Enter')searchScryfall()});
+document.getElementById('clearResultsBtn').onclick=()=>{searchResults.innerHTML='';searchPanel.classList.remove('show')};
+document.getElementById('exportBtn').onclick=exportJsonDownload;
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=e=>{const f=e.target.files?.[0]; if(f) importJsonFile(f); e.target.value='';};
+document.getElementById('resetBtn').onclick=reset;
+document.getElementById('modalClose').onclick=closeModal;
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('show'))closeModal()});
+search.oninput=render; filter.onchange=render;
+render();
+</script>
+</body>
+</html>
