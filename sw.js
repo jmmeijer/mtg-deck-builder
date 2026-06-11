@@ -1,4 +1,4 @@
-const APP_CACHE = 'mtg-deck-builder-app-v1';
+const APP_CACHE = 'mtg-deck-builder-app-v2';
 const SCRYFALL_CACHE = 'mtg-deck-builder-scryfall-v1';
 const IMAGE_CACHE = 'mtg-deck-builder-images-v1';
 
@@ -6,7 +6,9 @@ const APP_SHELL = [
   './',
   './index.html',
   './css/styles.css',
-  './js/script.js'
+  './js/script.js',
+  './js/export-formats.js',
+  './js/view-modes.js'
 ];
 
 self.addEventListener('install', event => {
