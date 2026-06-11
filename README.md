@@ -13,6 +13,7 @@ The current version is themed around **The Rotwood Accord**: a Golgari Elf/Squir
 - Supports fuzzy quick-add by card name.
 - Saves progress locally in the browser with `localStorage`.
 - Supports JSON export and import so a board state can be backed up or shared.
+- Registers a service worker that caches the app shell, Scryfall API responses, and card images.
 
 ## Running locally
 
@@ -29,35 +30,36 @@ Then open:
 http://localhost:8000
 ```
 
-You can also open `index.html` directly in a browser, but using a local server is closer to how it will behave when hosted.
+You can also open `index.html` directly in a browser, but service workers require a secure context or localhost. For testing offline/image caching, use a local server or GitHub Pages.
 
 ## Current structure
 
 ```text
 .
-├── index.html   # App, styles, seed data, and JavaScript logic
-└── README.md    # Project documentation
+├── index.html        # HTML shell and critical first-paint CSS
+├── css/
+│   └── styles.css    # Non-critical app styling
+├── js/
+│   └── script.js     # App state, rendering, Scryfall calls, import/export, events
+├── sw.js             # Service worker for app/Scryfall/image caching
+└── README.md         # Project documentation
 ```
 
-At the moment, the app intentionally lives in one file. That keeps it easy to test and easy to publish through GitHub Pages, but it also means the next serious improvement should be splitting it into smaller files.
+## Service worker caching
+
+The service worker uses:
+
+- cache-first for local app files
+- network-first for Scryfall API responses
+- cache-first for Scryfall image files
+
+This should make repeated card browsing much faster and reduce duplicate image downloads. It does not replace the browser `localStorage` board state; JSON export is still the safest backup.
 
 ## Suggested next improvements
 
-### 1. Split the single file
+### 1. Improve drag ordering
 
-Move the current inline code into:
-
-```text
-src/
-├── app.js
-├── scryfall.js
-├── storage.js
-├── render.js
-├── deck-data.js
-└── styles.css
-```
-
-This will make bugs easier to find and future features less painful. Right now `index.html` is doing everything: layout, styling, seed data, state handling, API calls, rendering, modal logic, import/export, and drag/drop. That works, but it will become spaghetti with extra cheese if the project grows.
+The board currently supports moving cards between sections. A useful next improvement is order-preserving drag/drop within a section, so cards can be ranked manually.
 
 ### 2. Add deck-analysis features
 
@@ -84,28 +86,13 @@ Future options:
 - add shareable compressed deck-state URLs
 - optionally add GitHub Gist export/import later
 
-### 4. Add a manual test checklist
-
-Before changing logic, document basic checks:
-
-- load default board
-- load Scryfall data
-- add card by fuzzy name
-- search Scryfall and add result
-- drag card between sections
-- export JSON
-- import JSON
-- reset board
-- test mobile layout
-- test modal open/close
-
-### 5. Prepare GitHub Pages deployment
+### 4. Prepare GitHub Pages deployment
 
 This app is a good fit for GitHub Pages because it is static.
 
 Suggested steps:
 
-1. Keep `index.html` in the root or configure Pages to serve from `/docs`.
+1. Keep `index.html` and `sw.js` in the repository root.
 2. Enable GitHub Pages for the `main` branch.
 3. Add the live URL to this README.
 
