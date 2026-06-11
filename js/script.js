@@ -108,6 +108,14 @@ function sectionTitle(id) {
   return sections.find(section => section.id === id)?.title || id;
 }
 
+function getSectionCards(sectionId) {
+  return state.cards.filter(card => card.section === sectionId);
+}
+
+function getPriority(card) {
+  return getSectionCards(card.section).findIndex(item => item.id === card.id) + 1;
+}
+
 function render() {
   const query = norm(search.value);
   const sectionFilter = filter.value;
@@ -118,7 +126,7 @@ function render() {
     col.className = 'col';
     col.dataset.sec = section.id;
 
-    const all = state.cards.filter(card => card.section === section.id);
+    const all = getSectionCards(section.id);
     const visible = all.filter(card =>
       (sectionFilter === 'all' || card.section === sectionFilter)
       && (!query || [
@@ -143,7 +151,7 @@ function render() {
     if (isStacked) {
       cards.appendChild(renderStack(section, visible, all.length));
     } else {
-      visible.forEach(card => cards.appendChild(renderCard(card)));
+      visible.forEach(card => cards.appendChild(renderCard(card, getPriority(card))));
     }
 
     enableDrop(col, section.id);
@@ -166,17 +174,18 @@ function renderStack(section, visible, total) {
   return el;
 }
 
-function renderCard(card) {
+function renderCard(card, priority) {
   const el = document.createElement('article');
   el.className = 'card';
   el.draggable = true;
   el.dataset.id = card.id;
+  el.dataset.priority = priority;
 
   const imageUrl = img(card);
   const type = card.scryfall?.type_line || 'Not loaded yet';
   const mana = card.scryfall?.mana_cost || '';
 
-  el.innerHTML = `<div class="pic">${imageUrl ? `<img src="${imageUrl}" alt="${esc(card.name)}" loading="lazy">` : `<span>${esc(card.error || 'Image not loaded')}</span>`}</div><div class="quick"><button class="icon" title="Open on Scryfall">↗</button><button class="icon" title="Delete">×</button></div><div class="foot"><div class="name">${esc(card.name)}</div><div class="tags">${mana ? `<span class="tag">${esc(mana)}</span>` : ''}<span class="tag ${tagClass(card.status)}">${esc(card.status)}</span><span class="tag">${esc(type)}</span></div></div>`;
+  el.innerHTML = `<div class="priority-badge" title="Priority in this section">#${priority}</div><div class="pic">${imageUrl ? `<img src="${imageUrl}" alt="${esc(card.name)}" loading="lazy">` : `<span>${esc(card.error || 'Image not loaded')}</span>`}</div><div class="quick"><button class="icon" title="Open on Scryfall">↗</button><button class="icon" title="Delete">×</button></div><div class="foot"><div class="name">${esc(card.name)}</div><div class="tags">${mana ? `<span class="tag">${esc(mana)}</span>` : ''}<span class="tag ${tagClass(card.status)}">${esc(card.status)}</span><span class="tag">${esc(type)}</span></div></div>`;
 
   el.addEventListener('click', event => {
     if (event.target.closest('.quick')) return;
@@ -188,10 +197,27 @@ function renderCard(card) {
     event.dataTransfer.setData('text/plain', card.id);
     event.dataTransfer.effectAllowed = 'move';
   });
+  el.addEventListener('dragover', event => {
+    if (!dragged || dragged === card.id) return;
+    event.preventDefault();
+    event.stopPropagation();
+    showCardDropIndicator(el, getCardDropPosition(event, el));
+  });
+  el.addEventListener('dragleave', () => clearCardDropIndicator(el));
+  el.addEventListener('drop', event => {
+    if (!dragged || dragged === card.id) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const position = getCardDropPosition(event, el);
+    cleanupDropIndicators();
+    const moved = moveCard(dragged, card.section, card.id, position);
+    if (moved) msg(`${moved.name} moved ${position} ${card.name}.`);
+  });
   el.addEventListener('dragend', () => {
     dragged = null;
     el.classList.remove('dragging');
     document.querySelectorAll('.col.over').forEach(column => column.classList.remove('over'));
+    cleanupDropIndicators();
   });
 
   const [openBtn, deleteBtn] = el.querySelectorAll('.icon');
@@ -211,6 +237,50 @@ function renderCard(card) {
   return el;
 }
 
+function getCardDropPosition(event, cardElement) {
+  const rect = cardElement.getBoundingClientRect();
+  return event.clientY > rect.top + rect.height / 2 ? 'after' : 'before';
+}
+
+function showCardDropIndicator(cardElement, position) {
+  cardElement.classList.toggle('drop-before', position === 'before');
+  cardElement.classList.toggle('drop-after', position === 'after');
+}
+
+function clearCardDropIndicator(cardElement) {
+  cardElement.classList.remove('drop-before', 'drop-after');
+}
+
+function cleanupDropIndicators() {
+  document.querySelectorAll('.card.drop-before, .card.drop-after').forEach(clearCardDropIndicator);
+}
+
+function moveCard(cardId, targetSection, targetId = null, position = 'end') {
+  if (!cardId || cardId === targetId) return null;
+
+  const sourceIndex = state.cards.findIndex(card => card.id === cardId);
+  if (sourceIndex < 0) return null;
+
+  const [card] = state.cards.splice(sourceIndex, 1);
+  card.section = targetSection;
+
+  let insertIndex = state.cards.length;
+  if (targetId) {
+    const targetIndex = state.cards.findIndex(item => item.id === targetId);
+    if (targetIndex >= 0) {
+      insertIndex = position === 'after' ? targetIndex + 1 : targetIndex;
+    }
+  } else {
+    const lastInSection = state.cards.map((item, index) => item.section === targetSection ? index : -1).filter(index => index >= 0).at(-1);
+    insertIndex = typeof lastInSection === 'number' ? lastInSection + 1 : state.cards.length;
+  }
+
+  state.cards.splice(insertIndex, 0, card);
+  save();
+  render();
+  return card;
+}
+
 function enableDrop(col, sectionId) {
   col.addEventListener('dragover', event => {
     event.preventDefault();
@@ -221,13 +291,10 @@ function enableDrop(col, sectionId) {
   });
   col.addEventListener('drop', event => {
     event.preventDefault();
+    cleanupDropIndicators();
     const id = event.dataTransfer.getData('text/plain') || dragged;
-    const card = state.cards.find(item => item.id === id);
-    if (!card) return;
-    card.section = sectionId;
-    save();
-    render();
-    msg(`${card.name} moved to ${sectionTitle(sectionId)}.`);
+    const moved = moveCard(id, sectionId);
+    if (moved) msg(`${moved.name} moved to the end of ${sectionTitle(sectionId)}.`);
   });
 }
 
@@ -384,7 +451,7 @@ function openModal(id) {
 
   modalInfo.innerHTML = `
     <h2 id="modalTitle">${esc(card.name)}</h2>
-    <div class="tags"><span class="tag ${tagClass(card.status)}">${esc(card.status)}</span><span class="tag">${esc(sectionTitle(card.section))}</span>${scryfall.mana_cost ? `<span class="tag">${esc(scryfall.mana_cost)}</span>` : ''}</div>
+    <div class="tags"><span class="tag ${tagClass(card.status)}">${esc(card.status)}</span><span class="tag">${esc(sectionTitle(card.section))}</span><span class="tag">Priority #${getPriority(card)}</span>${scryfall.mana_cost ? `<span class="tag">${esc(scryfall.mana_cost)}</span>` : ''}</div>
     <p class="modal-line"><strong>Role:</strong> ${esc(card.role)}</p>
     <p class="modal-line"><strong>Type:</strong> ${esc(scryfall.type_line || 'Not loaded')}</p>
     <p class="modal-line"><strong>Set:</strong> ${esc(scryfall.set_name || 'Not loaded')} ${scryfall.released_at ? `(${esc(scryfall.released_at)})` : ''}</p>
@@ -398,9 +465,7 @@ function openModal(id) {
 
   document.getElementById('modalMove').value = card.section;
   document.getElementById('modalMoveBtn').onclick = () => {
-    card.section = document.getElementById('modalMove').value;
-    save();
-    render();
+    moveCard(card.id, document.getElementById('modalMove').value);
     openModal(card.id);
   };
   document.getElementById('modalOpenBtn').onclick = () => window.open(card.scryfall?.scryfall_uri || `https://scryfall.com/search?q=${encodeURIComponent('!"' + card.name + '"')}`, '_blank', 'noopener,noreferrer');
