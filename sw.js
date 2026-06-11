@@ -1,4 +1,4 @@
-const APP_CACHE = 'mtg-deck-builder-app-v2';
+const APP_CACHE = 'mtg-deck-builder-app-v3';
 const SCRYFALL_CACHE = 'mtg-deck-builder-scryfall-v1';
 const IMAGE_CACHE = 'mtg-deck-builder-images-v1';
 

@@ -122,7 +122,7 @@ function renderNameStack(section, visible, total) {
     item.className = 'visual-stack-card';
     item.dataset.id = card.id;
     item.draggable = true;
-    item.style.zIndex = String(visible.length - index);
+    item.style.setProperty('--stack-index', index);
     item.title = `Open ${card.name}`;
 
     const mana = card.scryfall?.mana_cost || '';
