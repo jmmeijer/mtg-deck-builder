@@ -28,6 +28,22 @@ ensureState = function ensureStateWithViewModes(nextState) {
   return ensureViewModes(originalEnsureState(nextState));
 };
 
+const originalRenderCard = renderCard;
+renderCard = function renderCardWithMinimalImage(card, priority) {
+  const imageUrl = img(card);
+  const el = originalRenderCard(card, priority);
+
+  if (!imageUrl) {
+    el.classList.add('no-image');
+    return el;
+  }
+
+  el.classList.add('has-image');
+  el.querySelector('.foot')?.remove();
+  el.querySelector('.pic')?.classList.add('image-loaded');
+  return el;
+};
+
 function getFilteredCards(cards, query, sectionFilter, sectionId) {
   return cards.filter(card =>
     (sectionFilter === 'all' || sectionId === sectionFilter)
