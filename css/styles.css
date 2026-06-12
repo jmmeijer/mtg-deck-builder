@@ -43,6 +43,9 @@
 .cards.name-stacked{position:relative;z-index:3;overflow:visible;padding-bottom:28px}
 .card{position:relative;border:1px solid #ffffff22;border-radius:13px;overflow:hidden;background:#00000044;min-height:190px;cursor:grab;box-shadow:0 12px 25px #00000055;transition:transform .12s,opacity .12s}
 .card.dragging{opacity:.35}.card:hover{transform:translateY(-2px)}
+.card.has-image{min-height:0;background:#00000033}
+.card.has-image .pic{aspect-ratio:488/680;padding:0}
+.card.has-image .priority-badge,.card.no-image .priority-badge{position:absolute;top:6px;left:6px;z-index:4;background:#000c;border:1px solid #ffffff66;border-radius:999px;padding:3px 8px;color:#fff;font-size:.82rem;font-weight:1000;line-height:1.15;text-shadow:0 1px 2px #000;box-shadow:0 4px 12px #0009}
 .pic{aspect-ratio:488/680;background:#ffffff10;display:grid;place-items:center;color:var(--muted);font-size:.8rem;text-align:center;padding:8px}
 .pic img{width:100%;height:100%;object-fit:cover;display:block}
 .foot{position:absolute;left:0;right:0;bottom:0;padding:8px;background:linear-gradient(#0000,#000d 24%,#000f)}
@@ -50,7 +53,7 @@
 .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
 .tag{font-size:.65rem;border-radius:999px;background:#ffffff22;border:1px solid #ffffff1f;padding:3px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tag.strong{background:#58b85d3a}.tag.module{background:#4f85d84a}.tag.maybe{background:#c4a85a3a}
-.quick{position:absolute;top:6px;right:6px;display:flex;gap:5px;opacity:0}.card:hover .quick{opacity:1}
+.quick{position:absolute;top:6px;right:6px;display:flex;gap:5px;opacity:0;z-index:5}.card:hover .quick{opacity:1}
 .icon{width:28px;height:28px;border-radius:50%;border:1px solid #fff4;background:#000b;color:white;cursor:pointer;font-weight:900}
 .stack-card{width:var(--cardw);min-height:190px;border:1px solid #ffffff24;border-radius:14px;background:linear-gradient(135deg,#17291d,#07110c);box-shadow:0 16px 28px #0008;position:relative;padding:12px;cursor:pointer;margin:0 auto;color:var(--text)}
 .stack-card::before,.stack-card::after{content:"";position:absolute;inset:0;border-radius:14px;border:1px solid #ffffff18;background:#ffffff08;z-index:-1}
