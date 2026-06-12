@@ -171,7 +171,3 @@ function renderNameStack(section, visible, total) {
 
   return stack;
 }
-
-ensureViewModes();
-save();
-render();
