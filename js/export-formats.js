@@ -42,9 +42,7 @@ function exportMainDecklist() {
   msg('Main decklist export created.');
 }
 
-function exportSelectedFormat() {
-  const format = document.getElementById('exportFormat')?.value || 'board-json';
-
+function exportFormat(format = 'board-json') {
   if (format === 'main-decklist') {
     exportMainDecklist();
     return;
@@ -53,10 +51,49 @@ function exportSelectedFormat() {
   exportBoardJson();
 }
 
+function exportSelectedFormat(format) {
+  const selectedFormat = format || document.getElementById('exportFormat')?.value || 'board-json';
+  exportFormat(selectedFormat);
+}
+
 function bindExportFormats() {
+  const menu = document.getElementById('exportMenu');
+  const toggle = document.getElementById('exportMenuBtn');
+  const list = document.getElementById('exportMenuList');
+
+  function closeMenu() {
+    menu?.classList.remove('open');
+    toggle?.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleMenu(event) {
+    event.stopPropagation();
+    const isOpen = menu?.classList.toggle('open');
+    toggle?.setAttribute('aria-expanded', String(Boolean(isOpen)));
+  }
+
+  if (toggle && list) {
+    toggle.onclick = toggleMenu;
+    list.addEventListener('click', event => {
+      const item = event.target.closest('[data-export-format]');
+      if (!item) return;
+      closeMenu();
+      exportFormat(item.dataset.exportFormat);
+    });
+
+    document.addEventListener('click', event => {
+      if (!menu?.contains(event.target)) closeMenu();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeMenu();
+    });
+
+    return;
+  }
+
   const exportButton = document.getElementById('exportBtn');
-  if (!exportButton) return;
-  exportButton.onclick = exportSelectedFormat;
+  if (exportButton) exportButton.onclick = () => exportSelectedFormat();
 }
 
 bindExportFormats();
