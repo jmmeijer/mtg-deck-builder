@@ -46,11 +46,13 @@
     </div>
     <div class="actions">
       <button class="btn green" id="loadBtn">Load Scryfall data</button>
-      <select class="select" id="exportFormat" aria-label="Export format">
-        <option value="board-json">Board backup JSON</option>
-        <option value="main-decklist">Main decklist TXT</option>
-      </select>
-      <button class="btn blue" id="exportBtn">Export</button>
+      <div class="export-menu" id="exportMenu">
+        <button class="btn blue export-menu-toggle" id="exportMenuBtn" type="button" aria-haspopup="true" aria-expanded="false">Export ▾</button>
+        <div class="export-menu-list" id="exportMenuList" role="menu" aria-label="Export options">
+          <button type="button" class="export-menu-item" role="menuitem" data-export-format="board-json">Board backup JSON</button>
+          <button type="button" class="export-menu-item" role="menuitem" data-export-format="main-decklist">Main decklist TXT</button>
+        </div>
+      </div>
       <button class="btn gold" id="importBtn">Upload JSON</button>
       <button class="btn red" id="resetBtn">Reset</button>
       <input class="hidden-file" id="importFile" type="file" accept="application/json,.json" />
