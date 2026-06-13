@@ -89,5 +89,5 @@
 .modal-image{border-radius:18px;overflow:hidden;background:#ffffff10;align-self:start}.modal-image img{display:block;width:100%;height:auto}.modal-info h2{margin:6px 40px 8px 0;font-size:clamp(1.4rem,3vw,2.2rem)}
 .modal-line{color:var(--muted);margin:6px 0;line-height:1.45}.oracle{white-space:pre-line;background:#ffffff0d;border:1px solid #ffffff14;border-radius:14px;padding:12px;margin:12px 0;line-height:1.45}.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.modal-actions .select{max-width:260px}
 .toast{position:fixed;right:16px;bottom:16px;background:#000d;border:1px solid #fff3;color:white;padding:12px 14px;border-radius:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(15px);transition:.18s;pointer-events:none;max-width:420px;z-index:80}.toast.show{opacity:1;transform:none}.hidden-file{display:none}
-@media(pointer:coarse){.card,.visual-stack-card{touch-action:none}}
+@media(pointer:coarse){.card,.visual-stack-card{touch-action:pan-y}}
 @media(max-width:760px){.cards{grid-template-columns:repeat(auto-fill,minmax(115px,1fr))}.modal-dialog{grid-template-columns:1fr}.modal-image{max-width:340px;margin:auto}.export-menu{width:100%}.export-menu-toggle{width:100%;justify-content:center}.export-menu-list{left:0;right:0}.visual-stack-card:hover,.visual-stack-card:focus-within{transform:translateY(-18px) scale(1.02)}}
