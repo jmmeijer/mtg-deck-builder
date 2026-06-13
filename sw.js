@@ -1,6 +1,16 @@
-const APP_CACHE = 'mtg-deck-builder-app-v7';
+// Bump APP_CACHE whenever the local app shell changes.
+// Do not tie image caching to this version number.
+const APP_CACHE = 'mtg-deck-builder-app-v8';
+
+// API responses are small and can be refreshed separately from the app shell.
 const SCRYFALL_CACHE = 'mtg-deck-builder-scryfall-v1';
+
+// Scryfall card images live in their own stable cache.
+// Keep this name unchanged unless you intentionally want to clear all cached images.
+// This lets downloaded card images survive normal service-worker/app-shell updates.
 const IMAGE_CACHE = 'mtg-deck-builder-images-v1';
+
+const APP_CACHE_PREFIX = 'mtg-deck-builder-app-';
 
 const APP_SHELL = [
   './',
@@ -22,10 +32,13 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  const keep = new Set([APP_CACHE, SCRYFALL_CACHE, IMAGE_CACHE]);
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(key => !keep.has(key)).map(key => caches.delete(key))))
+      .then(keys => Promise.all(keys
+        // Only prune old app-shell caches. Leave IMAGE_CACHE untouched so card images persist
+        // when APP_CACHE changes from v7 to v8, v9, etc.
+        .filter(key => key.startsWith(APP_CACHE_PREFIX) && key !== APP_CACHE)
+        .map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -46,10 +59,16 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (url.hostname === 'cards.scryfall.io' || url.hostname.endsWith('.scryfall.io')) {
+  if (isScryfallImageUrl(url)) {
+    // Card images are cache-first and stored in IMAGE_CACHE, not APP_CACHE.
+    // This keeps already-downloaded images available across app-shell cache upgrades.
     event.respondWith(cacheFirst(request, IMAGE_CACHE));
   }
 });
+
+function isScryfallImageUrl(url) {
+  return url.hostname === 'cards.scryfall.io' || url.hostname.endsWith('.scryfall.io');
+}
 
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
