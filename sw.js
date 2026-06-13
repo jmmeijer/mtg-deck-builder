@@ -1,4 +1,4 @@
-const APP_CACHE = 'mtg-deck-builder-app-v6';
+const APP_CACHE = 'mtg-deck-builder-app-v7';
 const SCRYFALL_CACHE = 'mtg-deck-builder-scryfall-v1';
 const IMAGE_CACHE = 'mtg-deck-builder-images-v1';
 
@@ -9,6 +9,7 @@ const APP_SHELL = [
   './js/script.js',
   './js/export-formats.js',
   './js/view-modes.js',
+  './js/mobile-drag-drop.js',
   './data/seed-cards.json'
 ];
 
