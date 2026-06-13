@@ -25,11 +25,16 @@ function createMobileDragGhost(source) {
   ghost.style.width = `${rect.width}px`;
   ghost.style.height = `${rect.height}px`;
   document.body.appendChild(ghost);
-  return ghost;
+
+  return {
+    ghost,
+    offsetX: rect.width / 2,
+    offsetY: Math.min(rect.height / 2, 90)
+  };
 }
 
-function positionMobileDragGhost(ghost, x, y) {
-  ghost.style.transform = `translate3d(${x + 12}px, ${y + 12}px, 0)`;
+function positionMobileDragGhost(ghost, x, y, offsetX = 0, offsetY = 0) {
+  ghost.style.transform = `translate3d(${x - offsetX}px, ${y - offsetY}px, 0)`;
 }
 
 function getMobileDropTarget(x, y, draggedId) {
@@ -70,8 +75,12 @@ function startMobileDrag(event, source) {
   dragged = mobileDrag.id;
   document.body.classList.add('mobile-dragging');
   source.classList.add('dragging');
-  mobileDrag.ghost = createMobileDragGhost(source);
-  positionMobileDragGhost(mobileDrag.ghost, event.clientX, event.clientY);
+
+  const { ghost, offsetX, offsetY } = createMobileDragGhost(source);
+  mobileDrag.ghost = ghost;
+  mobileDrag.offsetX = offsetX;
+  mobileDrag.offsetY = offsetY;
+  positionMobileDragGhost(mobileDrag.ghost, event.clientX, event.clientY, offsetX, offsetY);
 }
 
 function updateMobileDropTarget(event) {
@@ -152,6 +161,8 @@ function bindMobileDragDrop() {
       startY: event.clientY,
       dragging: false,
       ghost: null,
+      offsetX: 0,
+      offsetY: 0,
       target: null
     };
 
@@ -169,7 +180,7 @@ function bindMobileDragDrop() {
     if (!mobileDrag.dragging) startMobileDrag(event, mobileDrag.source);
 
     event.preventDefault();
-    positionMobileDragGhost(mobileDrag.ghost, event.clientX, event.clientY);
+    positionMobileDragGhost(mobileDrag.ghost, event.clientX, event.clientY, mobileDrag.offsetX, mobileDrag.offsetY);
     updateMobileDropTarget(event);
   });
 
