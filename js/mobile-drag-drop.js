@@ -1,4 +1,6 @@
 const MOBILE_DRAG_THRESHOLD = 10;
+const MOBILE_DRAG_HOLD_DELAY = 260;
+const MOBILE_SCROLL_CANCEL_THRESHOLD = 12;
 
 let mobileDrag = null;
 let suppressMobileClick = false;
@@ -69,7 +71,22 @@ function getMobileDropTarget(x, y, draggedId) {
   return null;
 }
 
+function armMobileDragHold() {
+  if (!mobileDrag) return;
+  clearTimeout(mobileDrag.holdTimer);
+  mobileDrag.holdTimer = setTimeout(() => {
+    if (mobileDrag) mobileDrag.holdReady = true;
+  }, MOBILE_DRAG_HOLD_DELAY);
+}
+
+function clearMobileDragHold() {
+  if (!mobileDrag?.holdTimer) return;
+  clearTimeout(mobileDrag.holdTimer);
+  mobileDrag.holdTimer = null;
+}
+
 function startMobileDrag(event, source) {
+  clearMobileDragHold();
   mobileDrag.dragging = true;
   suppressMobileClick = true;
   dragged = mobileDrag.id;
@@ -99,6 +116,7 @@ function updateMobileDropTarget(event) {
 
 function finishMobileDrag(event) {
   const drag = mobileDrag;
+  clearMobileDragHold();
   mobileDrag = null;
   dragged = null;
 
@@ -125,8 +143,9 @@ function finishMobileDrag(event) {
   }, 150);
 }
 
-function cancelMobileDrag() {
+function cancelMobileDrag({ suppressClick = false } = {}) {
   if (!mobileDrag) return;
+  clearMobileDragHold();
   mobileDrag.ghost?.remove();
   mobileDrag.source?.classList.remove('dragging');
   mobileDrag = null;
@@ -134,7 +153,7 @@ function cancelMobileDrag() {
   document.body.classList.remove('mobile-dragging');
   clearMobileDropState();
   setTimeout(() => {
-    suppressMobileClick = false;
+    suppressMobileClick = suppressClick;
   }, 150);
 }
 
@@ -160,13 +179,15 @@ function bindMobileDragDrop() {
       startX: event.clientX,
       startY: event.clientY,
       dragging: false,
+      holdReady: false,
+      holdTimer: null,
       ghost: null,
       offsetX: 0,
       offsetY: 0,
       target: null
     };
 
-    source.setPointerCapture?.(event.pointerId);
+    armMobileDragHold();
   });
 
   board.addEventListener('pointermove', event => {
@@ -175,6 +196,13 @@ function bindMobileDragDrop() {
     const dx = event.clientX - mobileDrag.startX;
     const dy = event.clientY - mobileDrag.startY;
     const distance = Math.hypot(dx, dy);
+
+    if (!mobileDrag.dragging && !mobileDrag.holdReady) {
+      if (distance > MOBILE_SCROLL_CANCEL_THRESHOLD) {
+        cancelMobileDrag();
+      }
+      return;
+    }
 
     if (!mobileDrag.dragging && distance < MOBILE_DRAG_THRESHOLD) return;
     if (!mobileDrag.dragging) startMobileDrag(event, mobileDrag.source);
