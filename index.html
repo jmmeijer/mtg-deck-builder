@@ -33,6 +33,18 @@
     @media(max-width:1200px){.board{grid-template-columns:repeat(2,1fr)}.hero,.toolbar{grid-template-columns:1fr}.actions,.stats{justify-content:flex-start}}
     @media(max-width:760px){.app{padding:10px}.board{grid-template-columns:1fr}.row{flex-direction:column;align-items:stretch}.actions .select{width:100%}}
   </style>
+  <script>
+    (() => {
+      const storageKey = 'rotwood-accord-board-v2';
+      const migrationKey = 'rotwood-accord-full-v6-seed-loaded';
+      if (!localStorage.getItem(migrationKey)) {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) localStorage.setItem(`${storageKey}-backup-before-full-v6`, saved);
+        localStorage.removeItem(storageKey);
+        localStorage.setItem(migrationKey, new Date().toISOString());
+      }
+    })();
+  </script>
   <script src="js/script.js" defer></script>
   <script src="js/export-formats.js" defer></script>
   <script src="js/view-modes.js" defer></script>
