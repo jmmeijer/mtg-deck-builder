@@ -64,6 +64,7 @@
       try {
         card.scryfall = await sfNamed(card.name, true);
       } catch (exactError) {
+        await wait(SCRYFALL_REQUEST_DELAY);
         card.scryfall = await sfNamed(card.name, false);
       }
 
