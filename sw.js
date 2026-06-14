@@ -1,13 +1,13 @@
 // Bump APP_CACHE whenever the local app shell changes.
 // Do not tie image caching to this version number.
-const APP_CACHE = 'mtg-deck-builder-app-v12';
+const APP_CACHE = 'mtg-deck-builder-app-v13';
 
 // API responses are small and can be refreshed separately from the app shell.
 const SCRYFALL_CACHE = 'mtg-deck-builder-scryfall-v1';
 
 // Scryfall card images live in their own stable cache.
 // Keep this name unchanged unless you intentionally want to clear all cached images.
-// This lets downloaded card images survive normal service-worker/app-shell updates.
+// This lets downloaded card images survive normal service-worker updates.
 const IMAGE_CACHE = 'mtg-deck-builder-images-v1';
 
 const APP_CACHE_PREFIX = 'mtg-deck-builder-app-';
@@ -19,6 +19,7 @@ const APP_SHELL = [
   './js/script.js',
   './js/export-formats.js',
   './js/view-modes.js',
+  './js/owned-counts.js',
   './js/mobile-drag-drop.js',
   './data/seed-cards.json'
 ];
