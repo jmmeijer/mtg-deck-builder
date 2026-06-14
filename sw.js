@@ -61,7 +61,8 @@ self.addEventListener('fetch', event => {
 
   if (isScryfallImageUrl(url)) {
     // Card images are cache-first and stored in IMAGE_CACHE, not APP_CACHE.
-    // This keeps already-downloaded images available across app-shell cache upgrades.
+    // Browser image requests can return opaque no-cors responses. Those still
+    // need to be cached, otherwise the image cache will look empty offline.
     event.respondWith(cacheFirst(request, IMAGE_CACHE));
   }
 });
@@ -76,7 +77,7 @@ async function cacheFirst(request, cacheName) {
   if (cached) return cached;
 
   const response = await fetch(request);
-  if (isCacheable(response)) {
+  if (isCacheableForCache(response, cacheName)) {
     cache.put(request, response.clone());
   }
   return response;
@@ -87,7 +88,7 @@ async function networkFirst(request, cacheName) {
 
   try {
     const response = await fetch(request);
-    if (isCacheable(response)) {
+    if (isCacheableForCache(response, cacheName)) {
       cache.put(request, response.clone());
     }
     return response;
@@ -96,6 +97,17 @@ async function networkFirst(request, cacheName) {
     if (cached) return cached;
     throw error;
   }
+}
+
+function isCacheableForCache(response, cacheName) {
+  if (cacheName === IMAGE_CACHE) return isImageCacheable(response);
+  return isCacheable(response);
+}
+
+function isImageCacheable(response) {
+  // Cross-origin <img> requests commonly resolve to opaque responses.
+  // Opaque responses have status 0 and ok === false, but they are valid to cache.
+  return response && (response.ok || response.type === 'opaque');
 }
 
 function isCacheable(response) {
