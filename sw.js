@@ -1,6 +1,6 @@
 // Bump APP_CACHE whenever the local app shell changes.
 // Do not tie image caching to this version number.
-const APP_CACHE = 'mtg-deck-builder-app-v14';
+const APP_CACHE = 'mtg-deck-builder-app-v15';
 
 // API responses are small and can be refreshed separately from the app shell.
 const SCRYFALL_CACHE = 'mtg-deck-builder-scryfall-v1';
@@ -17,6 +17,7 @@ const APP_SHELL = [
   './index.html',
   './css/styles.css',
   './js/script.js',
+  './js/indexeddb-storage.js',
   './js/export-formats.js',
   './js/view-modes.js',
   './js/owned-counts.js',
