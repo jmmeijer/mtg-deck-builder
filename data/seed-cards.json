@@ -119,5 +119,9 @@
   ["Sandwurm Convergence", "cut", "Cut from V1", "Too expensive"],
   ["Tower Defense", "cut", "Cut from V1", "One-shot defense"],
   ["Elven Bow", "cut", "Cut from V1", "Weaker flyer defense"],
-  ["Creeping Renaissance", "cut", "Cut from V1", "Too slow"]
+  ["Creeping Renaissance", "cut", "Cut from V1", "Too slow"],
+  ["Coat of Arms", "module", "Powerful but dangerous / tribal anthem module", "Symmetrical tribal power multiplier; explosive with Squirrels, Elves, and Maskwood Nexus, but boosts opponents too"],
+  ["Galadhrim Brigade", "maybe", "Strong maybe / possible main", "Squad Elf lord and scalable Elfball mana sink; token-copy lords stack and Chatterfang adds Squirrels for each copy created"],
+  ["Incubation Druid", "maybe", "Strong maybe / possible main", "Color-fixing Elf ramp that taps for three mana once it has a +1/+1 counter"],
+  ["Deadbridge Chant", "module", "Maybe / graveyard-value module", "Six-mana self-mill and random recurring value engine; powerful in grindy recursion builds but slow for tight V1"]
 ]
