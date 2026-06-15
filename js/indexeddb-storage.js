@@ -1,20 +1,37 @@
 (() => {
   const DB_NAME = 'rotwood-accord-db';
-  const DB_VERSION = 1;
-  const STORE_NAME = 'board-state';
+  const DB_VERSION = 2;
+  const BOARD_STORE = 'boards';
+  const CARD_STORE = 'cards';
+  const LEGACY_STORE = 'board-state';
   const BOARD_ID = 'current';
   const LOCAL_BACKUP_KEY = `${STORAGE_KEY}-backup-before-indexeddb`;
 
   let dbPromise = null;
-  let lastSavedState = null;
   let saveChain = Promise.resolve();
 
-  function cloneState(value) {
+  function cloneValue(value) {
     return JSON.parse(JSON.stringify(value));
   }
 
   function supportsIndexedDb() {
     return 'indexedDB' in window;
+  }
+
+  function requestToPromise(request) {
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  function ensureCardIndexes(store) {
+    if (!store.indexNames.contains('boardId')) {
+      store.createIndex('boardId', 'boardId', { unique: false });
+    }
+    if (!store.indexNames.contains('boardSection')) {
+      store.createIndex('boardSection', ['boardId', 'section'], { unique: false });
+    }
   }
 
   function openBoardDb() {
@@ -26,8 +43,17 @@
 
       request.onupgradeneeded = () => {
         const db = request.result;
-        if (!db.objectStoreNames.contains(STORE_NAME)) {
-          db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+        const transaction = request.transaction;
+
+        if (!db.objectStoreNames.contains(BOARD_STORE)) {
+          db.createObjectStore(BOARD_STORE, { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains(CARD_STORE)) {
+          const cardStore = db.createObjectStore(CARD_STORE, { keyPath: 'id' });
+          ensureCardIndexes(cardStore);
+        } else {
+          ensureCardIndexes(transaction.objectStore(CARD_STORE));
         }
       };
 
@@ -38,34 +64,79 @@
     return dbPromise;
   }
 
-  async function readIndexedDbState() {
+  async function getBoardRecord() {
     const db = await openBoardDb();
-
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORE_NAME, 'readonly');
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.get(BOARD_ID);
-
-      request.onsuccess = () => resolve(request.result?.state || null);
-      request.onerror = () => reject(request.error);
-    });
+    const transaction = db.transaction(BOARD_STORE, 'readonly');
+    return requestToPromise(transaction.objectStore(BOARD_STORE).get(BOARD_ID));
   }
 
-  async function writeIndexedDbState(nextState) {
+  async function getCardRecordsForBoard(boardId = BOARD_ID) {
     const db = await openBoardDb();
-    const snapshot = cloneState(nextState);
+    const transaction = db.transaction(CARD_STORE, 'readonly');
+    const index = transaction.objectStore(CARD_STORE).index('boardId');
+    return requestToPromise(index.getAll(boardId));
+  }
+
+  function stripStorageFields(card) {
+    const copy = { ...card };
+    delete copy.boardId;
+    delete copy.sortIndex;
+    delete copy.updatedAt;
+    return copy;
+  }
+
+  async function readStructuredBoardState() {
+    const boardRecord = await getBoardRecord();
+    if (!boardRecord) return null;
+
+    const cards = await getCardRecordsForBoard(boardRecord.id);
+    cards.sort((left, right) => (left.sortIndex ?? 0) - (right.sortIndex ?? 0));
+
+    return {
+      cards: cards.map(stripStorageFields),
+      ui: boardRecord.ui || {}
+    };
+  }
+
+  async function readLegacyIndexedDbState() {
+    const db = await openBoardDb();
+    if (!db.objectStoreNames.contains(LEGACY_STORE)) return null;
+
+    const transaction = db.transaction(LEGACY_STORE, 'readonly');
+    const legacy = await requestToPromise(transaction.objectStore(LEGACY_STORE).get(BOARD_ID));
+    return legacy?.state || null;
+  }
+
+  async function writeStructuredBoardState(nextState) {
+    const db = await openBoardDb();
+    const snapshot = cloneValue(nextState);
+    const existingCards = await getCardRecordsForBoard(BOARD_ID);
+    const updatedAt = new Date().toISOString();
 
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORE_NAME, 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.put({
+      const transaction = db.transaction([BOARD_STORE, CARD_STORE], 'readwrite');
+      const boardStore = transaction.objectStore(BOARD_STORE);
+      const cardStore = transaction.objectStore(CARD_STORE);
+
+      boardStore.put({
         id: BOARD_ID,
-        state: snapshot,
-        updatedAt: new Date().toISOString()
+        ui: cloneValue(snapshot.ui || {}),
+        updatedAt
       });
 
-      request.onsuccess = () => resolve(snapshot);
-      request.onerror = () => reject(request.error);
+      existingCards.forEach(card => cardStore.delete(card.id));
+      snapshot.cards.forEach((card, sortIndex) => {
+        cardStore.put({
+          ...cloneValue(card),
+          boardId: BOARD_ID,
+          sortIndex,
+          updatedAt
+        });
+      });
+
+      transaction.oncomplete = () => resolve(snapshot);
+      transaction.onerror = () => reject(transaction.error);
+      transaction.onabort = () => reject(transaction.error || new Error('IndexedDB transaction aborted.'));
     });
   }
 
@@ -101,20 +172,20 @@
     if (!supportsIndexedDb()) return loadFromLocalStorage();
 
     try {
-      const indexedDbState = await readIndexedDbState();
-      if (indexedDbState && Array.isArray(indexedDbState.cards)) {
-        lastSavedState = indexedDbState;
-        return ensureState(indexedDbState);
+      const structuredState = await readStructuredBoardState();
+      if (structuredState && Array.isArray(structuredState.cards)) {
+        return ensureState(structuredState);
       }
 
+      const legacyIndexedDbState = await readLegacyIndexedDbState();
       const localStorageState = readLocalStorageState();
-      const migratedState = localStorageState ? ensureState(localStorageState) : loadDefaultState();
+      const sourceState = legacyIndexedDbState || localStorageState;
+      const migratedState = sourceState ? ensureState(sourceState) : loadDefaultState();
 
       preserveLocalStorageBackup();
-      await writeIndexedDbState(migratedState);
-      lastSavedState = migratedState;
+      await writeStructuredBoardState(migratedState);
 
-      if (localStorageState) msg('Migrated board storage to IndexedDB. localStorage backup kept.');
+      if (sourceState) msg('Migrated board storage to per-card IndexedDB records. localStorage backup kept.');
       return migratedState;
     } catch (error) {
       console.warn('IndexedDB load failed. Falling back to localStorage.', error);
@@ -128,12 +199,10 @@
       return;
     }
 
-    const snapshot = cloneState(state);
-    lastSavedState = snapshot;
-
+    const snapshot = cloneValue(state);
     saveChain = saveChain
       .catch(() => {})
-      .then(() => writeIndexedDbState(snapshot))
+      .then(() => writeStructuredBoardState(snapshot))
       .catch(error => {
         console.warn('IndexedDB save failed. Writing emergency localStorage copy.', error);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
