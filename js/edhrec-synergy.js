@@ -17,6 +17,17 @@
       .replace(/^-+|-+$/g, '');
   }
 
+  function getEndpoint(card, slug) {
+    const type = card.isCommander ? 'Commander' : 'Card';
+    const path = card.isCommander ? 'commanders' : 'cards';
+    return {
+      type,
+      path,
+      url: `${EDHREC_BASE}/${path}/${slug}.json`,
+      pageUrl: `https://edhrec.com/${path}/${slug}`
+    };
+  }
+
   function parseNumber(value) {
     if (typeof value === 'number') return value;
     if (typeof value !== 'string') return null;
@@ -143,33 +154,20 @@
   async function loadEdhrecSuggestions(card) {
     const slug = edhrecSlug(card.name);
     if (!slug) return [];
-    if (cache.has(slug)) return cache.get(slug);
-    if (inFlight.has(slug)) return inFlight.get(slug);
+    const endpoint = getEndpoint(card, slug);
+    const cacheKey = `${endpoint.path}:${slug}`;
+    if (cache.has(cacheKey)) return cache.get(cacheKey);
+    if (inFlight.has(cacheKey)) return inFlight.get(cacheKey);
 
     const task = (async () => {
-      const endpoints = [
-        { type: 'Card', url: `${EDHREC_BASE}/cards/${slug}.json` },
-        { type: 'Commander', url: `${EDHREC_BASE}/commanders/${slug}.json` }
-      ];
+      const data = await fetchJson(endpoint.url);
+      const suggestions = collectSuggestions(data, card.name);
+      if (!suggestions.length) throw new Error(`No EDHREC suggestions found on the ${endpoint.type.toLowerCase()} page.`);
+      cache.set(cacheKey, { suggestions, source: endpoint });
+      return cache.get(cacheKey);
+    })().finally(() => inFlight.delete(cacheKey));
 
-      const errors = [];
-      for (const endpoint of endpoints) {
-        try {
-          const data = await fetchJson(endpoint.url);
-          const suggestions = collectSuggestions(data, card.name);
-          if (suggestions.length) {
-            cache.set(slug, { suggestions, source: endpoint });
-            return cache.get(slug);
-          }
-        } catch (error) {
-          errors.push(`${endpoint.type}: ${error.message}`);
-        }
-      }
-
-      throw new Error(errors.join(' / ') || 'No EDHREC suggestions found.');
-    })().finally(() => inFlight.delete(slug));
-
-    inFlight.set(slug, task);
+    inFlight.set(cacheKey, task);
     return task;
   }
 
@@ -203,7 +201,8 @@
         role: `EDHREC suggestion for ${sourceCard.name}`,
         scryfall: result,
         error: null,
-        ownedCount: 0
+        ownedCount: 0,
+        isCommander: false
       });
       msg(`Added ${result.name} to Maybeboard.`);
     } catch (error) {
@@ -215,7 +214,8 @@
         role: `EDHREC suggestion for ${sourceCard.name}`,
         scryfall: null,
         error: error.message,
-        ownedCount: 0
+        ownedCount: 0,
+        isCommander: false
       });
       msg(`Added ${suggestion.name} without Scryfall data.`);
     }
@@ -229,14 +229,16 @@
     const actions = modalInfo.querySelector('.modal-actions');
     if (!actions) return null;
 
+    const slug = edhrecSlug(card.name);
+    const endpoint = getEndpoint(card, slug);
     const panel = document.createElement('section');
     panel.className = 'edhrec-panel';
     panel.innerHTML = `
       <div class="edhrec-header">
         <h3>EDHREC synergy suggestions</h3>
-        <a href="https://edhrec.com/cards/${edhrecSlug(card.name)}" target="_blank" rel="noopener noreferrer">Open EDHREC</a>
+        <a href="${endpoint.pageUrl}" target="_blank" rel="noopener noreferrer">Open EDHREC ${endpoint.type}</a>
       </div>
-      <div class="edhrec-body"><p class="modal-line">Loading EDHREC suggestions...</p></div>
+      <div class="edhrec-body"><p class="modal-line">Loading EDHREC ${endpoint.type.toLowerCase()} suggestions...</p></div>
     `;
     actions.before(panel);
     return panel;
