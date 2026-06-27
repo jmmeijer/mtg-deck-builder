@@ -1,4 +1,20 @@
 (() => {
+  function injectCommanderStyles() {
+    if (document.getElementById('commanderCardStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'commanderCardStyles';
+    style.textContent = `
+      .commander-badge{position:absolute;right:7px;bottom:7px;z-index:6;border:1px solid #ffffffaa;border-radius:999px;background:linear-gradient(#c4a85a,#7c641f);color:#fff;padding:5px 7px;font-size:.62rem;font-weight:1000;line-height:1;text-shadow:0 1px 2px #000;box-shadow:0 4px 12px #0009;pointer-events:none}
+      .visual-commander-badge{right:6px;bottom:6px;font-size:.58rem;padding:4px 6px}
+      .commander-control{margin:12px 0;padding:12px;border:1px solid #c4a85a55;border-radius:14px;background:#c4a85a18;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+      .commander-control .modal-line{margin-bottom:0}
+      @media(max-width:760px){.commander-control{grid-template-columns:1fr}.commander-control .btn{width:100%}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  injectCommanderStyles();
+
   function normalizeCommanderFlags(nextState) {
     let commanderSeen = false;
     nextState.cards.forEach(card => {
