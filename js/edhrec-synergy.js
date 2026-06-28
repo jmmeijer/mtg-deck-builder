@@ -5,6 +5,27 @@
   const inFlight = new Map();
   const scryfallCache = new Map();
 
+  function injectEdhrecCarouselStyles() {
+    if (document.getElementById('edhrecCarouselStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'edhrecCarouselStyles';
+    style.textContent = `
+      .edhrec-carousel{display:flex;gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:4px 2px 12px;margin-top:8px;scrollbar-width:thin}
+      .edhrec-suggestion-card{flex:0 0 158px;scroll-snap-align:start;border:1px solid #ffffff18;border-radius:14px;background:#00000028;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 12px 24px #0005}
+      .edhrec-image{aspect-ratio:488/680;background:#ffffff10;display:grid;place-items:center;color:var(--muted);font-size:.72rem;text-align:center;padding:8px}
+      .edhrec-image img{width:100%;height:100%;object-fit:cover;display:block}
+      .edhrec-card-body{padding:8px;display:flex;flex-direction:column;gap:6px;min-height:162px}
+      .edhrec-card-body .edhrec-name{min-height:2.25em}
+      .edhrec-add-row{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:auto;align-items:center}
+      .edhrec-section{min-height:30px;border-radius:999px;padding:4px 7px;font-size:.68rem;font-weight:800}
+      .edhrec-add-row .mini-btn{min-height:30px;padding:4px 8px}
+      @media(max-width:760px){.edhrec-suggestion-card{flex-basis:145px}.edhrec-card-body{min-height:170px}.edhrec-add-row{grid-template-columns:1fr}.edhrec-add-row .mini-btn{width:100%}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  injectEdhrecCarouselStyles();
+
   function primaryCardName(name) {
     return String(name || '').split('//')[0].trim();
   }
