@@ -1,8 +1,28 @@
 (() => {
   const EDHREC_BASE = 'https://json.edhrec.com/pages';
   const MAX_SUGGESTIONS = 12;
+  const DEFAULT_SUGGESTION_SECTION = 'maybe';
   const cache = new Map();
   const inFlight = new Map();
+  const scryfallSuggestionCache = new Map();
+
+  function injectEdhrecCarouselStyles() {
+    if (document.getElementById('edhrecCarouselStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'edhrecCarouselStyles';
+    style.textContent = `
+      .edhrec-carousel{display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:8px 2px 12px;margin-top:8px;scrollbar-width:thin}
+      .edhrec-suggestion-card{flex:0 0 152px;scroll-snap-align:start;border:1px solid #ffffff18;border-radius:14px;background:#0000002f;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 12px 24px #0005}
+      .edhrec-art{aspect-ratio:488/680;background:#ffffff10;display:grid;place-items:center;color:var(--muted);font-size:.72rem;text-align:center;overflow:hidden}
+      .edhrec-art img{width:100%;height:100%;object-fit:cover;display:block}
+      .edhrec-card-body{padding:8px;display:flex;flex-direction:column;gap:6px;min-height:150px}
+      .edhrec-name{font-weight:900;font-size:.78rem;line-height:1.15}.edhrec-meta{color:var(--muted);font-size:.67rem;line-height:1.22;min-height:2.4em}
+      .edhrec-controls{display:grid;gap:6px;margin-top:auto}.edhrec-section-select{min-height:32px;border-radius:9px;padding:5px 7px;font-size:.72rem}.edhrec-controls .mini-btn{width:100%;min-height:30px}
+      .edhrec-loading-note{font-size:.72rem;color:var(--muted);margin-top:6px}
+      @media(max-width:760px){.edhrec-suggestion-card{flex-basis:138px}.edhrec-card-body{min-height:150px}}
+    `;
+    document.head.appendChild(style);
+  }
 
   function primaryCardName(name) {
     return String(name || '').split('//')[0].trim();
@@ -97,7 +117,9 @@
       inclusion: parseNumber(inclusion),
       inclusionLabel: formatPercent(inclusion),
       decksLabel: formatDecks(decks),
-      potentialDecksLabel: formatDecks(potentialDecks)
+      potentialDecksLabel: formatDecks(potentialDecks),
+      scryfall: null,
+      scryfallError: null
     };
   }
 
@@ -171,6 +193,37 @@
     return task;
   }
 
+  function getScryfallImage(result) {
+    return result?.image_uris?.normal
+      || result?.image_uris?.small
+      || result?.card_faces?.[0]?.image_uris?.normal
+      || result?.card_faces?.[0]?.image_uris?.small
+      || '';
+  }
+
+  async function loadSuggestionScryfall(suggestion) {
+    const key = norm(suggestion.name);
+    if (suggestion.scryfall || suggestion.scryfallError) return suggestion;
+    if (scryfallSuggestionCache.has(key)) {
+      const cached = scryfallSuggestionCache.get(key);
+      suggestion.scryfall = cached.scryfall || null;
+      suggestion.scryfallError = cached.error || null;
+      if (cached.scryfall?.name) suggestion.name = cached.scryfall.name;
+      return suggestion;
+    }
+
+    try {
+      const scryfall = await sfNamed(suggestion.name, false);
+      suggestion.scryfall = scryfall;
+      suggestion.name = scryfall.name;
+      scryfallSuggestionCache.set(key, { scryfall, error: null });
+    } catch (error) {
+      suggestion.scryfallError = error.message;
+      scryfallSuggestionCache.set(key, { scryfall: null, error: error.message });
+    }
+    return suggestion;
+  }
+
   function renderSuggestionMeta(suggestion) {
     const parts = [];
     if (suggestion.synergyLabel) parts.push(`${suggestion.synergyLabel} synergy`);
@@ -180,7 +233,39 @@
     return parts.join(' · ');
   }
 
-  async function addEdhrecSuggestion(suggestion, sourceCard, button) {
+  function renderSectionOptions(selected = DEFAULT_SUGGESTION_SECTION) {
+    return ['main', 'maybe', 'module', 'cut']
+      .map(section => `<option value="${section}"${section === selected ? ' selected' : ''}>${esc(sectionTitle(section))}</option>`)
+      .join('');
+  }
+
+  function updateSuggestionCard(cardElement, suggestion) {
+    if (!cardElement) return;
+    const imageUrl = getScryfallImage(suggestion.scryfall);
+    const art = cardElement.querySelector('.edhrec-art');
+    const name = cardElement.querySelector('.edhrec-name');
+
+    if (name) name.textContent = suggestion.name;
+    if (!art) return;
+
+    if (imageUrl) {
+      art.innerHTML = `<img src="${imageUrl}" alt="${esc(suggestion.name)}" loading="lazy">`;
+    } else if (suggestion.scryfallError) {
+      art.innerHTML = `<span>Image unavailable</span>`;
+    }
+  }
+
+  async function enrichSuggestionCards(suggestions, carousel) {
+    for (let index = 0; index < suggestions.length; index++) {
+      if (!carousel.isConnected) return;
+      const suggestion = suggestions[index];
+      await loadSuggestionScryfall(suggestion);
+      updateSuggestionCard(carousel.querySelector(`[data-suggestion-index="${index}"]`), suggestion);
+      await new Promise(resolve => setTimeout(resolve, 80));
+    }
+  }
+
+  async function addEdhrecSuggestion(suggestion, sourceCard, button, section) {
     if (state.cards.some(card => norm(card.name) === norm(suggestion.name))) {
       msg(`${suggestion.name} is already on the board.`);
       button.disabled = true;
@@ -188,15 +273,19 @@
       return;
     }
 
+    const targetSection = section || DEFAULT_SUGGESTION_SECTION;
+    const controls = button.closest('.edhrec-controls');
+    const sectionSelect = controls?.querySelector('.edhrec-section-select');
     button.disabled = true;
+    if (sectionSelect) sectionSelect.disabled = true;
     button.textContent = 'Adding...';
 
     try {
-      const result = await sfNamed(suggestion.name, false);
+      const result = suggestion.scryfall || await sfNamed(suggestion.name, false);
       state.cards.unshift({
         id: crypto.randomUUID(),
         name: result.name,
-        section: 'maybe',
+        section: targetSection,
         status: 'New candidate',
         role: `EDHREC suggestion for ${sourceCard.name}`,
         scryfall: result,
@@ -204,12 +293,12 @@
         ownedCount: 0,
         isCommander: false
       });
-      msg(`Added ${result.name} to Maybeboard.`);
+      msg(`Added ${result.name} to ${sectionTitle(targetSection)}.`);
     } catch (error) {
       state.cards.unshift({
         id: crypto.randomUUID(),
         name: suggestion.name,
-        section: 'maybe',
+        section: targetSection,
         status: 'New candidate',
         role: `EDHREC suggestion for ${sourceCard.name}`,
         scryfall: null,
@@ -217,7 +306,7 @@
         ownedCount: 0,
         isCommander: false
       });
-      msg(`Added ${suggestion.name} without Scryfall data.`);
+      msg(`Added ${suggestion.name} to ${sectionTitle(targetSection)} without Scryfall data.`);
     }
 
     save();
@@ -247,32 +336,43 @@
   function renderEdhrecSuggestions(panel, card, result) {
     const body = panel.querySelector('.edhrec-body');
     const sourceLabel = result.source?.type ? `${result.source.type} page` : 'EDHREC';
-    body.innerHTML = `<p class="modal-line">From ${esc(sourceLabel)}. Suggestions are added to the Maybeboard.</p>`;
+    body.innerHTML = `<p class="modal-line">From ${esc(sourceLabel)}. Scroll sideways to review images, choose a board, then add.</p><p class="edhrec-loading-note">Images are loaded from Scryfall.</p>`;
 
-    const list = document.createElement('div');
-    list.className = 'edhrec-suggestions';
-    result.suggestions.forEach(suggestion => {
+    const carousel = document.createElement('div');
+    carousel.className = 'edhrec-carousel';
+    result.suggestions.forEach((suggestion, index) => {
       const item = document.createElement('article');
-      item.className = 'edhrec-suggestion';
+      item.className = 'edhrec-suggestion-card';
+      item.dataset.suggestionIndex = String(index);
       const meta = renderSuggestionMeta(suggestion);
       item.innerHTML = `
-        <div>
+        <div class="edhrec-art"><span>Loading image...</span></div>
+        <div class="edhrec-card-body">
           <div class="edhrec-name">${esc(suggestion.name)}</div>
           <div class="edhrec-meta">${esc(meta || suggestion.context)}</div>
+          <div class="edhrec-controls">
+            <label class="sr-only" for="edhrec-section-${index}">Add ${esc(suggestion.name)} to board</label>
+            <select class="select edhrec-section-select" id="edhrec-section-${index}">${renderSectionOptions()}</select>
+            <button class="mini-btn" type="button">Add</button>
+          </div>
         </div>
-        <button class="mini-btn" type="button">Add</button>
       `;
       const button = item.querySelector('button');
-      button.onclick = () => addEdhrecSuggestion(suggestion, card, button);
-      list.appendChild(item);
+      const sectionSelect = item.querySelector('.edhrec-section-select');
+      button.onclick = () => addEdhrecSuggestion(suggestion, card, button, sectionSelect.value);
+      carousel.appendChild(item);
     });
-    body.appendChild(list);
+
+    body.appendChild(carousel);
+    enrichSuggestionCards(result.suggestions, carousel);
   }
 
   function renderEdhrecError(panel, error) {
     const body = panel.querySelector('.edhrec-body');
     body.innerHTML = `<p class="modal-line">Could not load EDHREC suggestions: ${esc(error.message)}</p>`;
   }
+
+  injectEdhrecCarouselStyles();
 
   const originalOpenModal = openModal;
   openModal = function openModalWithEdhrec(id) {
