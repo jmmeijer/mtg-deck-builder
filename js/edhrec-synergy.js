@@ -3,6 +3,28 @@
   const MAX_SUGGESTIONS = 12;
   const cache = new Map();
   const inFlight = new Map();
+  const scryfallCache = new Map();
+
+  function injectEdhrecCarouselStyles() {
+    if (document.getElementById('edhrecCarouselStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'edhrecCarouselStyles';
+    style.textContent = `
+      .edhrec-carousel{display:flex;gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:4px 2px 12px;margin-top:8px;scrollbar-width:thin}
+      .edhrec-suggestion-card{flex:0 0 158px;scroll-snap-align:start;border:1px solid #ffffff18;border-radius:14px;background:#00000028;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 12px 24px #0005}
+      .edhrec-image{aspect-ratio:488/680;background:#ffffff10;display:grid;place-items:center;color:var(--muted);font-size:.72rem;text-align:center;padding:8px}
+      .edhrec-image img{width:100%;height:100%;object-fit:cover;display:block}
+      .edhrec-card-body{padding:8px;display:flex;flex-direction:column;gap:6px;min-height:162px}
+      .edhrec-card-body .edhrec-name{min-height:2.25em}
+      .edhrec-add-row{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:auto;align-items:center}
+      .edhrec-section{min-height:30px;border-radius:999px;padding:4px 7px;font-size:.68rem;font-weight:800}
+      .edhrec-add-row .mini-btn{min-height:30px;padding:4px 8px}
+      @media(max-width:760px){.edhrec-suggestion-card{flex-basis:145px}.edhrec-card-body{min-height:170px}.edhrec-add-row{grid-template-columns:1fr}.edhrec-add-row .mini-btn{width:100%}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  injectEdhrecCarouselStyles();
 
   function primaryCardName(name) {
     return String(name || '').split('//')[0].trim();
@@ -97,7 +119,9 @@
       inclusion: parseNumber(inclusion),
       inclusionLabel: formatPercent(inclusion),
       decksLabel: formatDecks(decks),
-      potentialDecksLabel: formatDecks(potentialDecks)
+      potentialDecksLabel: formatDecks(potentialDecks),
+      scryfall: null,
+      scryfallError: null
     };
   }
 
@@ -171,6 +195,33 @@
     return task;
   }
 
+  async function loadSuggestionScryfall(suggestion) {
+    const key = norm(suggestion.name);
+    if (scryfallCache.has(key)) return scryfallCache.get(key);
+
+    const task = sfNamed(suggestion.name, false)
+      .then(result => {
+        suggestion.scryfall = result;
+        suggestion.name = result.name;
+        suggestion.scryfallError = null;
+        return result;
+      })
+      .catch(error => {
+        suggestion.scryfall = null;
+        suggestion.scryfallError = error.message;
+        throw error;
+      });
+
+    scryfallCache.set(key, task);
+    return task;
+  }
+
+  function suggestionImageUrl(suggestion) {
+    const card = suggestion.scryfall;
+    if (!card) return '';
+    return card.image_uris?.normal || card.image_uris?.small || card.card_faces?.[0]?.image_uris?.normal || card.card_faces?.[0]?.image_uris?.small || '';
+  }
+
   function renderSuggestionMeta(suggestion) {
     const parts = [];
     if (suggestion.synergyLabel) parts.push(`${suggestion.synergyLabel} synergy`);
@@ -180,7 +231,7 @@
     return parts.join(' · ');
   }
 
-  async function addEdhrecSuggestion(suggestion, sourceCard, button) {
+  async function addEdhrecSuggestion(suggestion, sourceCard, button, section) {
     if (state.cards.some(card => norm(card.name) === norm(suggestion.name))) {
       msg(`${suggestion.name} is already on the board.`);
       button.disabled = true;
@@ -192,11 +243,11 @@
     button.textContent = 'Adding...';
 
     try {
-      const result = await sfNamed(suggestion.name, false);
+      const result = suggestion.scryfall || await loadSuggestionScryfall(suggestion);
       state.cards.unshift({
         id: crypto.randomUUID(),
         name: result.name,
-        section: 'maybe',
+        section,
         status: 'New candidate',
         role: `EDHREC suggestion for ${sourceCard.name}`,
         scryfall: result,
@@ -204,12 +255,12 @@
         ownedCount: 0,
         isCommander: false
       });
-      msg(`Added ${result.name} to Maybeboard.`);
+      msg(`Added ${result.name} to ${sectionTitle(section)}.`);
     } catch (error) {
       state.cards.unshift({
         id: crypto.randomUUID(),
         name: suggestion.name,
-        section: 'maybe',
+        section,
         status: 'New candidate',
         role: `EDHREC suggestion for ${sourceCard.name}`,
         scryfall: null,
@@ -217,7 +268,7 @@
         ownedCount: 0,
         isCommander: false
       });
-      msg(`Added ${suggestion.name} without Scryfall data.`);
+      msg(`Added ${suggestion.name} to ${sectionTitle(section)} without Scryfall data.`);
     }
 
     save();
@@ -244,29 +295,59 @@
     return panel;
   }
 
+  function updateSuggestionCard(cardElement, suggestion) {
+    const imageWrap = cardElement.querySelector('.edhrec-image');
+    const name = cardElement.querySelector('.edhrec-name');
+    const imageUrl = suggestionImageUrl(suggestion);
+
+    name.textContent = suggestion.name;
+    imageWrap.innerHTML = imageUrl
+      ? `<img src="${imageUrl}" alt="${esc(suggestion.name)}">`
+      : `<span>${esc(suggestion.scryfallError || 'No image')}</span>`;
+  }
+
+  function renderSuggestionCard(suggestion, sourceCard) {
+    const item = document.createElement('article');
+    item.className = 'edhrec-suggestion-card';
+    const meta = renderSuggestionMeta(suggestion);
+    item.innerHTML = `
+      <div class="edhrec-image"><span>Loading image...</span></div>
+      <div class="edhrec-card-body">
+        <div class="edhrec-name">${esc(suggestion.name)}</div>
+        <div class="edhrec-meta">${esc(meta || suggestion.context)}</div>
+        <div class="edhrec-add-row">
+          <select class="select edhrec-section" aria-label="Add ${esc(suggestion.name)} to section">
+            <option value="main">Main</option>
+            <option value="maybe" selected>Maybe</option>
+            <option value="module">Module</option>
+            <option value="cut">Cut</option>
+          </select>
+          <button class="mini-btn" type="button">Add</button>
+        </div>
+      </div>
+    `;
+
+    const select = item.querySelector('.edhrec-section');
+    const button = item.querySelector('button');
+    button.onclick = () => addEdhrecSuggestion(suggestion, sourceCard, button, select.value);
+
+    loadSuggestionScryfall(suggestion)
+      .then(() => updateSuggestionCard(item, suggestion))
+      .catch(() => updateSuggestionCard(item, suggestion));
+
+    return item;
+  }
+
   function renderEdhrecSuggestions(panel, card, result) {
     const body = panel.querySelector('.edhrec-body');
     const sourceLabel = result.source?.type ? `${result.source.type} page` : 'EDHREC';
-    body.innerHTML = `<p class="modal-line">From ${esc(sourceLabel)}. Suggestions are added to the Maybeboard.</p>`;
+    body.innerHTML = `<p class="modal-line">From ${esc(sourceLabel)}. Swipe or scroll horizontally. Choose a board before adding a card.</p>`;
 
-    const list = document.createElement('div');
-    list.className = 'edhrec-suggestions';
-    result.suggestions.forEach(suggestion => {
-      const item = document.createElement('article');
-      item.className = 'edhrec-suggestion';
-      const meta = renderSuggestionMeta(suggestion);
-      item.innerHTML = `
-        <div>
-          <div class="edhrec-name">${esc(suggestion.name)}</div>
-          <div class="edhrec-meta">${esc(meta || suggestion.context)}</div>
-        </div>
-        <button class="mini-btn" type="button">Add</button>
-      `;
-      const button = item.querySelector('button');
-      button.onclick = () => addEdhrecSuggestion(suggestion, card, button);
-      list.appendChild(item);
-    });
-    body.appendChild(list);
+    const carousel = document.createElement('div');
+    carousel.className = 'edhrec-carousel';
+    carousel.setAttribute('aria-label', 'EDHREC synergy card suggestions');
+    result.suggestions.forEach(suggestion => carousel.appendChild(renderSuggestionCard(suggestion, card)));
+    body.appendChild(carousel);
   }
 
   function renderEdhrecError(panel, error) {
